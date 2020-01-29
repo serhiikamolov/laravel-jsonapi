@@ -1,7 +1,7 @@
 {
-    "name": "serhiikamolov/laravel-jsonapi",
+    "name": "serhii-kamolov/laravel-jsonapi",
     "type": "library",
-    "license": "BSD License",
+    "license": "BSD-2-Clause-FreeBSD",
     "authors": [
         {
             "name": "Serhii Kamolov",
