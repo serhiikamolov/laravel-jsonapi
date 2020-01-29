@@ -1,5 +1,5 @@
 <?php
-namespace JsonApi\Library;
+namespace JsonApi;
 
 use JsonApi\Contracts\Serializer;
 use Illuminate\Database\Eloquent\Collection;
