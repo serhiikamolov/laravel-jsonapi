@@ -1,11 +1,7 @@
 <?php
-declare(strict_types=1);
+namespace JsonApi;
 
-
-namespace App\Library;
-
-
-use App\Library\Contracts\Serializer;
+use JsonApi\Contracts\Serializer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 

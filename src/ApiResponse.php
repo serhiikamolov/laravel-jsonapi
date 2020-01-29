@@ -1,14 +1,15 @@
 <?php
-namespace App\Library;
+namespace JsonApi\Library;
 
-use App\Library\Contracts\Serializer;
+use JsonApi\Contracts\Serializer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
+use JsonApi\ResponseSerializer;
 
-class ApiResponse extends JsonResponse implements \App\Library\Contracts\ApiResponse
+class ApiResponse extends JsonResponse implements \JsonApi\Contracts\ApiResponse
 {
 
     const PAGINATION_LIMIT = 10;
@@ -61,9 +62,9 @@ class ApiResponse extends JsonResponse implements \App\Library\Contracts\ApiResp
     /**
      * @param int $status
      * @param mixed $message
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse|\App\Library\Contracts\ApiResponse
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse|\JsonApi\Contracts\ApiResponse
      */
-    public function error(int $status, $message = ''):\App\Library\Contracts\ApiResponse
+    public function error(int $status, $message = ''):\JsonApi\Contracts\ApiResponse
     {
         $data = $this->getData(true);
         $data["errors"] = is_array($message) ? $message : [$message];
@@ -82,7 +83,7 @@ class ApiResponse extends JsonResponse implements \App\Library\Contracts\ApiResp
      * @param int $expires
      * @return Contracts\ApiResponse
      */
-    public function token(string $token, string $type = 'bearer', int $expires = 0):\App\Library\Contracts\ApiResponse
+    public function token(string $token, string $type = 'bearer', int $expires = 0):\JsonApi\Contracts\ApiResponse
     {
         return $this->data([
             'access_token' => $token,
@@ -95,7 +96,7 @@ class ApiResponse extends JsonResponse implements \App\Library\Contracts\ApiResp
      * @param array $data
      * @return Contracts\ApiResponse
      */
-    public function data(array $data=[]):\App\Library\Contracts\ApiResponse
+    public function data(array $data=[]):\JsonApi\Contracts\ApiResponse
     {
         $originalData = $this->getData(true);
         $originalData['data'] = $data;
@@ -119,7 +120,7 @@ class ApiResponse extends JsonResponse implements \App\Library\Contracts\ApiResp
      * @param Collection $items
      * @return mixed
      */
-    public function paginate():\App\Library\Contracts\ApiResponse
+    public function paginate():\JsonApi\Contracts\ApiResponse
     {
         $request = $this->getRequest();
 
@@ -157,7 +158,7 @@ class ApiResponse extends JsonResponse implements \App\Library\Contracts\ApiResp
      * @param Serializer|null $serializer
      * @return JsonResponse
      */
-    public function serialize($data, ?Serializer $serializer = null): \App\Library\Contracts\ApiResponse
+    public function serialize($data, ?Serializer $serializer = null): \JsonApi\Contracts\ApiResponse
     {
         if (!$serializer) {
             $serializer = $this->getSerializer();
@@ -166,7 +167,7 @@ class ApiResponse extends JsonResponse implements \App\Library\Contracts\ApiResp
         return $this->data($serializer->serialize($data));
     }
 
-    public function code(int $code): \App\Library\Contracts\ApiResponse
+    public function code(int $code): \JsonApi\Contracts\ApiResponse
     {
         return $this->setStatusCode($code);
     }

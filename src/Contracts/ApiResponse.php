@@ -1,5 +1,5 @@
 <?php
-namespace App\Library\Contracts;
+namespace JsonApi\Contracts;
 
 interface ApiResponse
 {
