@@ -1,11 +1,10 @@
 <?php
-namespace JsonApi;
+namespace JsonApi\Response;
 
-use JsonApi\Contracts\Serializer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class ResponseSerializer implements Serializer
+class Serializer implements \JsonApi\Contracts\Serializer
 {
     protected array $fields = [];
 

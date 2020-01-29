@@ -1,7 +1,7 @@
 <?php
 namespace JsonApi\Contracts;
 
-interface ApiResponse
+interface Response
 {
     public function setLink(array $link);
 
@@ -15,9 +15,9 @@ interface ApiResponse
 
     public function paginate();
 
-    public function code(int $code):ApiResponse;
+    public function code(int $code):Response;
 
-    public function serialize($data, ?Serializer $serializer = null):ApiResponse;
+    public function serialize($data, ?Serializer $serializer = null):Response;
 
-    public function token(string $token):ApiResponse;
+    public function token(string $token):Response;
 }
