@@ -19,5 +19,7 @@
         "psr-0": {
             "JsonApi\\": "src/"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
