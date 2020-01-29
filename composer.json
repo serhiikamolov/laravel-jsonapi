@@ -1,0 +1,23 @@
+{
+    "name": "serhiikamolov/laravel-jsonapi",
+    "type": "library",
+    "license": "BSD License",
+    "authors": [
+        {
+            "name": "Serhii Kamolov",
+            "email": "serhii.kamolov@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "illuminate/http": "^6.0",
+        "illuminate/database": "^6.0",
+        "illuminate/pagination": "^6.13",
+        "illuminate/support": "^6.13"
+    },
+    "autoload": {
+        "psr-0": {
+            "JsonApi\\": "src/"
+        }
+    }
+}
