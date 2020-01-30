@@ -1,6 +1,7 @@
 <?php
 namespace JsonApi\Response;
 
+use Illuminate\Contracts\Routing\UrlGenerator;
 use JsonApi\Contracts\Serializer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -14,11 +15,6 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
     const PAGINATION_LIMIT = 10;
 
     /**
-     * @var array
-     */
-    protected array $link = [];
-
-    /**
      * ApiResponse constructor.
      * @param mixed|null $data
      * @param int $status
@@ -29,33 +25,24 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
     {
         $response = [
             'jsonapi'=> ['version' => '1.0'],
-            'link' => $this->getLink(),
+            'link' => [
+                'self' => App::make(UrlGenerator::class)->current()
+            ],
             'data' => $data
         ];
         parent::__construct($response, $status, $headers, $options);
     }
 
     /**
-     * @param array $link
+     * @param array $links
      * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function setLink(array $link)
+    public function links(array $links)
     {
-        $this->link = $link;
         $originalData = $this->getData(true);
-        $originalData['link'] = $this->getLink();
+        $originalData['link'] = $originalData['link'] + $links;
 
         return $this->setData($originalData);
-    }
-
-    /**
-     * @return array
-     */
-    public function getLink():array
-    {
-        return [
-            'self' => url()->current()
-        ] + $this->link;
     }
 
     /**
@@ -80,7 +67,7 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
      * @param string $token
      * @param string $type
      * @param int $expires
-     * @return Contracts\Response
+     * @return \JsonApi\Contracts\Response
      */
     public function token(string $token, string $type = 'bearer', int $expires = 0):\JsonApi\Contracts\Response
     {

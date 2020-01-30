@@ -3,9 +3,7 @@ namespace JsonApi\Contracts;
 
 interface Response
 {
-    public function setLink(array $link);
-
-    public function getLink():array;
+    public function links(array $links);
 
     public function error(int $status, $message = '');
 

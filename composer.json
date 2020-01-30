@@ -13,7 +13,8 @@
         "illuminate/http": "^6.0",
         "illuminate/database": "^6.0",
         "illuminate/pagination": "^6.13",
-        "illuminate/support": "^6.13"
+        "illuminate/support": "^6.13",
+        "illuminate/routing": "^6.13"
     },
     "autoload": {
         "psr-0": {
