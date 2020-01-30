@@ -41,13 +41,13 @@ class Serializer implements \JsonApi\Contracts\Serializer
      * @param Model $item
      * @return array
      */
-    protected function processItem(Model $item):array
+    protected function processItem(Model $item)
     {
         $row = [];
 
         if (!empty($this->fields)) {
             foreach ($this->fields as $field) {
-                $row[$field] = $item->$field ?? $this->$field($item);
+                $row[$field] = method_exists($this, $field) ? $this->$field($item) : $item->$field;
             }
         } else {
             $row = $item->toArray();

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\App;
 class Response extends JsonResponse implements \JsonApi\Contracts\Response
 {
 
+    const JSONAPI_VERSION = '1.0';
+
     const PAGINATION_LIMIT = 10;
 
     /**
@@ -23,14 +25,13 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
      */
     public function __construct(?array $data = null, int $status = 200, array $headers = [], int $options = 0)
     {
-        $response = [
-            'jsonapi'=> ['version' => '1.0'],
-            'link' => [
+        parent::__construct([
+            'jsonapi'=> ['version' => static::JSONAPI_VERSION],
+            'links' => [
                 'self' => App::make(UrlGenerator::class)->current()
             ],
             'data' => $data
-        ];
-        parent::__construct($response, $status, $headers, $options);
+        ], $status, $headers, $options);
     }
 
     /**
@@ -126,21 +127,30 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
         $paginator->appends('limit', request('limit'));
         $paginator->setPath(url()->current());
 
+        return $this->paginatorToData($paginator);
+    }
+
+    /**
+     * @param LengthAwarePaginator $paginator
+     * @param array|null $items
+     * @return mixed
+     */
+    protected function paginatorToData(LengthAwarePaginator $paginator, ?array $items = null)
+    {
         return $this->data([
             'total' => $paginator->total(),
             'current_page' => $paginator->currentPage(),
             'per_page' => $paginator->count(),
-            'items' => $paginator->items(),
-        ])->setLink([
+            'items' => $items ?? $paginator->items(),
+        ])->links([
             'first_page' => $paginator->url(1),
             'last_page' => $paginator->url($paginator->lastPage()),
             'next_page' => $paginator->nextPageUrl(),
             'prev_page' => $paginator->previousPageUrl(),
         ]);
     }
-
     /**
-     * @param Model|Collection $data
+     * @param Model|Collection|LengthAwarePaginator $data
      * @param Serializer|null $serializer
      * @return JsonResponse
      */
@@ -150,9 +160,24 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
             $serializer = $this->getSerializer();
         }
 
-        return $this->data($serializer->serialize($data));
+        if ($data instanceof LengthAwarePaginator) {
+
+            return $this->paginatorToData(
+                $data,
+                $serializer->serialize($data->getCollection())
+            );
+
+        } else {
+            return $this->data($serializer->serialize($data));
+        }
     }
 
+    /**
+     * Add status code to the response
+     *
+     * @param int $code
+     * @return \JsonApi\Contracts\Response
+     */
     public function code(int $code): \JsonApi\Contracts\Response
     {
         return $this->setStatusCode($code);
