@@ -163,11 +163,14 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
      */
     protected function getSerializer(): Serializer
     {
-        return App::make(ResponseSerializer::class);
+        return App::make(\JsonApi\Response\Serializer::class);
     }
 
+    /**
+     * @return mixed
+     */
     protected function getRequest()
     {
-        return request();
+        return App::make('request');
     }
 }
