@@ -41,7 +41,7 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
     public function links(array $links)
     {
         $originalData = $this->getData(true);
-        $originalData['link'] = $originalData['link'] + $links;
+        $originalData['links'] = $originalData['links'] + $links;
 
         return $this->setData($originalData);
     }
