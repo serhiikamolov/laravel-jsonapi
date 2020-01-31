@@ -1,5 +1,5 @@
 <?php
-namespace JsonApi\Contracts;
+namespace SerhiiKamolov\JsonApi\Contracts;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

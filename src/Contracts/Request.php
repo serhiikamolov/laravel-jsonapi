@@ -1,10 +1,10 @@
 <?php
-namespace JsonApi\Contracts;
+namespace SerhiiKamolov\JsonApi\Contracts;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\App;
-use JsonApi\Response\Response;
+use SerhiiKamolov\JsonApi\Response\Response;
 
 abstract class Request extends \Illuminate\Foundation\Http\FormRequest
 {

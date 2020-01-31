@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-0": {
-            "JsonApi\\": "src/"
+            "SerhiiKamolov\\JsonApi\\": "src/"
         }
     },
     "minimum-stability": "dev",

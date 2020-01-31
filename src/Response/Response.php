@@ -1,8 +1,8 @@
 <?php
-namespace JsonApi\Response;
+namespace SerhiiKamolov\JsonApi\Response;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
-use JsonApi\Contracts\Serializer;
+use SerhiiKamolov\JsonApi\Contracts\Serializer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;

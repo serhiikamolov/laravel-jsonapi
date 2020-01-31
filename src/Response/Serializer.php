@@ -1,5 +1,5 @@
 <?php
-namespace JsonApi\Response;
+namespace SerhiiKamolov\JsonApi\Response;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

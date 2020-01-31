@@ -1,5 +1,5 @@
 <?php
-namespace JsonApi\Contracts;
+namespace SerhiiKamolov\JsonApi\Contracts;
 
 interface Response
 {
