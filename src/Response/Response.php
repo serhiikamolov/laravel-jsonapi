@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 
-class Response extends JsonResponse implements \JsonApi\Contracts\Response
+class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\Response
 {
 
     const JSONAPI_VERSION = '1.0';
@@ -49,9 +49,9 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
     /**
      * @param int $status
      * @param mixed $message
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse|\JsonApi\Contracts\Response
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse|\SerhiiKamolov\JsonApi\Contracts\Response
      */
-    public function error(int $status, $message = ''):\JsonApi\Contracts\Response
+    public function error(int $status, $message = ''):\SerhiiKamolov\JsonApi\Contracts\Response
     {
         $data = $this->getData(true);
         $data["errors"] = is_array($message) ? $message : [$message];
@@ -68,9 +68,9 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
      * @param string $token
      * @param string $type
      * @param int $expires
-     * @return \JsonApi\Contracts\Response
+     * @return \SerhiiKamolov\JsonApi\Contracts\Response
      */
-    public function token(string $token, string $type = 'bearer', int $expires = 0):\JsonApi\Contracts\Response
+    public function token(string $token, string $type = 'bearer', int $expires = 0):\SerhiiKamolov\JsonApi\Contracts\Response
     {
         return $this->data([
             'access_token' => $token,
@@ -83,7 +83,7 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
      * @param array $data
      * @return Contracts\Response
      */
-    public function data(array $data=[]):\JsonApi\Contracts\Response
+    public function data(array $data=[]):\SerhiiKamolov\JsonApi\Contracts\Response
     {
         $originalData = $this->getData(true);
         $originalData['data'] = $data;
@@ -107,7 +107,7 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
      * @param Collection $items
      * @return mixed
      */
-    public function paginate():\JsonApi\Contracts\Response
+    public function paginate():\SerhiiKamolov\JsonApi\Contracts\Response
     {
         $request = $this->getRequest();
 
@@ -154,7 +154,7 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
      * @param Serializer|null $serializer
      * @return JsonResponse
      */
-    public function serialize($data, ?Serializer $serializer = null): \JsonApi\Contracts\Response
+    public function serialize($data, ?Serializer $serializer = null): \SerhiiKamolov\JsonApi\Contracts\Response
     {
         if (!$serializer) {
             $serializer = $this->getSerializer();
@@ -176,9 +176,9 @@ class Response extends JsonResponse implements \JsonApi\Contracts\Response
      * Add status code to the response
      *
      * @param int $code
-     * @return \JsonApi\Contracts\Response
+     * @return \SerhiiKamolov\JsonApi\Contracts\Response
      */
-    public function code(int $code): \JsonApi\Contracts\Response
+    public function code(int $code): \SerhiiKamolov\JsonApi\Contracts\Response
     {
         return $this->setStatusCode($code);
     }

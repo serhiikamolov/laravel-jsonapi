@@ -4,7 +4,7 @@ namespace SerhiiKamolov\JsonApi\Response;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class Serializer implements \JsonApi\Contracts\Serializer
+class Serializer implements \SerhiiKamolov\JsonApi\Contracts\Serializer
 {
     protected array $fields = [];
 
