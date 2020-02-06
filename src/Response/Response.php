@@ -45,13 +45,13 @@ class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\
 
         return $this->setData($originalData);
     }
-
+    
     /**
      * @param int $status
-     * @param mixed $message
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse|\SerhiiKamolov\JsonApi\Contracts\Response
+     * @param string $message
+     * @return JsonResponse
      */
-    public function error(int $status, $message = ''):\SerhiiKamolov\JsonApi\Contracts\Response
+    public function error(int $status, $message = ''): JsonResponse
     {
         $data = $this->getData(true);
         $data["errors"] = is_array($message) ? $message : [$message];
@@ -68,9 +68,9 @@ class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\
      * @param string $token
      * @param string $type
      * @param int $expires
-     * @return \SerhiiKamolov\JsonApi\Contracts\Response
+     * @return JsonResponse
      */
-    public function token(string $token, string $type = 'bearer', int $expires = 0):\SerhiiKamolov\JsonApi\Contracts\Response
+    public function token(string $token, string $type = 'bearer', int $expires = 0):JsonResponse
     {
         return $this->data([
             'access_token' => $token,
@@ -80,10 +80,9 @@ class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\
     }
     /**
      * @param array $data
-     * @param array $data
-     * @return Contracts\Response
+     * @return JsonResponse
      */
-    public function data(array $data=[]):\SerhiiKamolov\JsonApi\Contracts\Response
+    public function data(array $data=[]):JsonResponse
     {
         $originalData = $this->getData(true);
         $originalData['data'] = $data;
@@ -107,7 +106,7 @@ class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\
      * @param Collection $items
      * @return mixed
      */
-    public function paginate():\SerhiiKamolov\JsonApi\Contracts\Response
+    public function paginate():JsonResponse
     {
         $request = $this->getRequest();
 
@@ -154,7 +153,7 @@ class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\
      * @param Serializer|null $serializer
      * @return JsonResponse
      */
-    public function serialize($data, ?Serializer $serializer = null): \SerhiiKamolov\JsonApi\Contracts\Response
+    public function serialize($data, ?Serializer $serializer = null): JsonResponse
     {
         if (!$serializer) {
             $serializer = $this->getSerializer();
@@ -178,7 +177,7 @@ class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\
      * @param int $code
      * @return \SerhiiKamolov\JsonApi\Contracts\Response
      */
-    public function code(int $code): \SerhiiKamolov\JsonApi\Contracts\Response
+    public function code(int $code): JsonResponse
     {
         return $this->setStatusCode($code);
     }
@@ -188,7 +187,7 @@ class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\
      */
     protected function getSerializer(): Serializer
     {
-        return App::make(\JsonApi\Response\Serializer::class);
+        return App::make(\SerhiiKamolov\JsonApi\Response\Serializer::class);
     }
 
     /**

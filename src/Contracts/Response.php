@@ -1,6 +1,8 @@
 <?php
 namespace SerhiiKamolov\JsonApi\Contracts;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 interface Response
 {
     public function links(array $links);
@@ -13,9 +15,9 @@ interface Response
 
     public function paginate();
 
-    public function code(int $code):Response;
+    public function code(int $code):JsonResponse;
 
-    public function serialize($data, ?Serializer $serializer = null):Response;
+    public function serialize($data, ?Serializer $serializer = null):JsonResponse;
 
-    public function token(string $token):Response;
+    public function token(string $token):JsonResponse;
 }
