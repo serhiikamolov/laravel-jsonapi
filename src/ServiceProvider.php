@@ -1,5 +1,5 @@
 <?php
-namespace serhiikamolov;
+namespace serhiikamolov\Laravel\JsonApi;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {

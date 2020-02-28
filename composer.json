@@ -1,7 +1,8 @@
 {
     "name": "serhiikamolov/laravel-jsonapi",
+    "description": "Set of interfaces and classes for building the most efficient JsonApi application",
     "type": "library",
-    "license": "BSD-2-Clause-FreeBSD",
+    "license": "MIT",
     "authors": [
         {
             "name": "Serhii Kamolov",
