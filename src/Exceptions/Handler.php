@@ -1,6 +1,6 @@
 <?php
 
-namespace SerhiiKamolov\JsonApi\Exceptions;
+namespace serhiikamolov\Laravel\JsonApi\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
-use SerhiiKamolov\JsonApi\Response\Response;
+use serhiikamolov\Laravel\JsonApi\Response\Response;
 
 class Handler extends ExceptionHandler
 {

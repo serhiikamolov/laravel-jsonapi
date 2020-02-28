@@ -1,15 +1,15 @@
 <?php
-namespace SerhiiKamolov\JsonApi\Response;
+namespace serhiikamolov\Laravel\JsonApi\Response;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
-use SerhiiKamolov\JsonApi\Contracts\Serializer;
+use serhiikamolov\Laravel\JsonApi\Contracts\Serializer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 
-class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\Response
+class Response extends JsonResponse implements \serhiikamolov\Laravel\JsonApi\Contracts\Response
 {
 
     const JSONAPI_VERSION = '1.0';
@@ -175,7 +175,7 @@ class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\
      * Add status code to the response
      *
      * @param int $code
-     * @return \SerhiiKamolov\JsonApi\Contracts\Response
+     * @return \serhiikamolov\Laravel\JsonApi\Contracts\Response
      */
     public function code(int $code): JsonResponse
     {
@@ -187,7 +187,7 @@ class Response extends JsonResponse implements \SerhiiKamolov\JsonApi\Contracts\
      */
     protected function getSerializer(): Serializer
     {
-        return App::make(\SerhiiKamolov\JsonApi\Response\Serializer::class);
+        return App::make(\serhiikamolov\Laravel\JsonApi\Response\Serializer::class);
     }
 
     /**
