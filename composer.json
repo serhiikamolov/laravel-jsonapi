@@ -21,6 +21,13 @@
             "serhiikamolov\\Laravel\\JsonApi\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "serhiikamolov\\Laravel\\JsonApi\\ServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
