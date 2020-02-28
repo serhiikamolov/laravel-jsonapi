@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-0": {
-            "SerhiiKamolov\\JsonApi\\": "src/"
+            "serhiikamolov\\Laravel\\JsonApi\\": "src/"
         }
     },
     "minimum-stability": "dev",
