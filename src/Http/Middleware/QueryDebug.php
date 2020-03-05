@@ -13,12 +13,12 @@ class QueryDebug
         /** @var Response $response */
         $response = $next($request);
 
-        if ($request instanceof Response && config('app.debug')) {
+        if ($response instanceof Response && config('app.debug')) {
             $query = DB::getQueryLog();
             return $response->debug([
-                'query' => [
+                'queries' => [
                     'total' =>  sizeof($query),
-                    'queries' => $query
+                    'list' => $query
                 ]
             ]);
         }
