@@ -45,7 +45,7 @@ class Response extends JsonResponse implements \serhiikamolov\Laravel\JsonApi\Co
 
         return $this->setData($originalData);
     }
-    
+
     /**
      * @param int $status
      * @param string $message
@@ -98,7 +98,7 @@ class Response extends JsonResponse implements \serhiikamolov\Laravel\JsonApi\Co
     public function debug(array $data=[])
     {
         $originalData = $this->getData(true);
-        $originalData['debug'] = $data;
+        $originalData['debug'] = array_merge($originalData['debug'] ?? [], $data);
         return $this->setData($originalData);
     }
 
@@ -175,7 +175,7 @@ class Response extends JsonResponse implements \serhiikamolov\Laravel\JsonApi\Co
      * Add status code to the response
      *
      * @param int $code
-     * @return \serhiikamolov\Laravel\JsonApi\Contracts\Response
+     * @return JsonResponse
      */
     public function code(int $code): JsonResponse
     {
