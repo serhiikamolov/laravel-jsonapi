@@ -10,10 +10,16 @@ class QueryDebug
 {
     public function handle($request, Closure $next)
     {
+        if (!config('app.debug', false)) {
+            return $next($request);
+        }
+
+        DB::enableQueryLog();
+
         /** @var Response $response */
         $response = $next($request);
 
-        if ($response instanceof Response && config('app.debug')) {
+        if ($response instanceof Response) {
             $query = DB::getQueryLog();
             return $response->debug([
                 'queries' => [

@@ -26,8 +26,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        if (config('app.debug', false)) {
-            DB::enableQueryLog();
-        }
+        //
     }
 }
