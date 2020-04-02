@@ -3,6 +3,7 @@ namespace serhiikamolov\Laravel\JsonApi\Response;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 
 class Serializer implements \serhiikamolov\Laravel\JsonApi\Contracts\Serializer
 {
@@ -47,7 +48,7 @@ class Serializer implements \serhiikamolov\Laravel\JsonApi\Contracts\Serializer
 
         if (!empty($this->fields)) {
             foreach ($this->fields as $field) {
-                $row[$field] = method_exists($this, $field) ? $this->$field($item) : $item->$field;
+                $row[$field] = method_exists($this, $field) ? App::call([$this, $field], ['item' => $item]) : $item->$field;
             }
         } else {
             $row = $item->toArray();
