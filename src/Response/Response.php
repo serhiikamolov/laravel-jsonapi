@@ -97,8 +97,20 @@ class Response extends JsonResponse implements \serhiikamolov\Laravel\JsonApi\Co
      */
     public function debug(array $data=[])
     {
+        return $this->meta($data, 'debug');
+    }
+
+    /**
+     * Add a meta data to response
+     *
+     * @param array $data
+     * @param string $key
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function meta(array $data=[], string $key = 'meta')
+    {
         $originalData = $this->getData(true);
-        $originalData['debug'] = array_merge($originalData['debug'] ?? [], $data);
+        $originalData[$key] = array_merge($originalData[$key] ?? [], $data);
         return $this->setData($originalData);
     }
 
