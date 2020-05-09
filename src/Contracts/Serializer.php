@@ -1,14 +1,13 @@
 <?php
 namespace serhiikamolov\Laravel\JsonApi\Contracts;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Support\Arrayable;
 
 interface Serializer
 {
     /**
-     * @param Model|Collection $data
+     * @param Arrayable $data
      * @return array
      */
-    public function serialize($data):array;
+    public function serialize(Arrayable $data):array;
 }

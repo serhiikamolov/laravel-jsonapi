@@ -19,6 +19,9 @@
         "illuminate/auth": "^7.0"
     },
     "autoload": {
+        "classmap": [
+            "src/"
+        ],
         "psr-0": {
             "serhiikamolov\\Laravel\\JsonApi\\": "src/"
         }
@@ -31,5 +34,9 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "require-dev": {
+        "phpunit/phpunit": "^9.1",
+        "mockery/mockery": "^1.3"
+    }
 }
