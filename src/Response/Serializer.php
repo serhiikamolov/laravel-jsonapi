@@ -54,10 +54,10 @@ class Serializer implements \serhiikamolov\Laravel\JsonApi\Contracts\Serializer
 
     /**
      * @param Arrayable $item
-     * @return array
+     * @return mixed
      * @throws SerializerException
      */
-    protected function processItem(Arrayable $item): array
+    protected function processItem(Arrayable $item)
     {
         $row = [];
 
