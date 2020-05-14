@@ -88,6 +88,8 @@ class SerializerTest extends TestCase
     public function test_serializeWithModifier()
     {
         $serializer = new class extends Serializer{
+            use \serhiikamolov\Laravel\JsonApi\Traits\Serializer\Modifiers\Timestamp;
+
             protected array $fields = [
                 'id',
                 'date:timestamp,minutes'

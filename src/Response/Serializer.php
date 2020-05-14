@@ -2,7 +2,6 @@
 
 namespace serhiikamolov\Laravel\JsonApi\Response;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -131,23 +130,5 @@ class Serializer implements \serhiikamolov\Laravel\JsonApi\Contracts\Serializer
         }
 
         return explode(',', $fieldParts[1]);
-    }
-
-    /**
-     * @param string|null $date
-     * @return int
-     */
-    protected function modifierTimestamp(?string $date): int
-    {
-        return Carbon::parse($date)->timestamp;
-    }
-
-    /**
-     * @param string|null $string
-     * @return string
-     */
-    protected function modifierTrim(?string $string): string
-    {
-        return trim($string);
     }
 }
