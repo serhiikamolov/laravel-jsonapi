@@ -12,7 +12,7 @@ instead of the default one
   
     $app->singleton(
        Illuminate\Contracts\Debug\ExceptionHandler::class,
-       \serhiikamolov\Laravel\JsonApi\Exceptions\Handler::class
+       \JsonAPI\Exceptions\Handler::class
     );
      
      
@@ -21,7 +21,7 @@ It's actually a simple extension of the FormRequest class that returns the valid
 
     namespace App\Http\Requests\Auth;
     
-    use \serhiikamolov\Laravel\JsonApi\Contracts\Request;
+    use \JsonAPI\Contracts\Request;
 
     class LoginRequest extends Request
     {
@@ -44,7 +44,7 @@ Usage of the request validation in the controller:
 
     namespace App\Http\Controllers;
     
-    use serhiikamolov\Laravel\JsonApi\Response\Response;
+    use JsonAPI\Response\Response;
     use App\Http\Requests\Auth\LoginRequest;
     use Illuminate\Http\JsonResponse;
     

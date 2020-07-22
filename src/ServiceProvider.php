@@ -14,8 +14,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         // default response class
         $this->app->bind(
-            \serhiikamolov\Laravel\JsonApi\Contracts\Response::class,
-            \serhiikamolov\Laravel\JsonApi\Response\Response::class
+            \JsonAPI\Contracts\Response::class,
+            \JsonAPI\Response\Response::class
         );
     }
 

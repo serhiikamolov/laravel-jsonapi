@@ -1,10 +1,10 @@
 <?php
 
-namespace serhiikamolov\Laravel\JsonApi\Http\Middleware;
+namespace JsonAPI\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\DB;
-use serhiikamolov\Laravel\JsonApi\Contracts\Response;
+use JsonAPI\Contracts\Response;
 
 class QueryDebug
 {

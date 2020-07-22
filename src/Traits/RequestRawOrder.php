@@ -1,5 +1,5 @@
 <?php
-namespace serhiikamolov\Laravel\JsonApi\Traits;
+namespace JsonAPI\Traits;
 
 trait RequestRawOrder {
 

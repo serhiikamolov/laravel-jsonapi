@@ -1,5 +1,5 @@
 <?php
-namespace serhiikamolov\Laravel\JsonApi\Exceptions;
+namespace JsonAPI\Exceptions;
 
 class SerializerException extends \Exception
 {

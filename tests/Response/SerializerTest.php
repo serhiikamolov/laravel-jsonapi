@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use serhiikamolov\Laravel\JsonApi\Response\Serializer;
+use JsonAPI\Response\Serializer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
@@ -88,7 +88,7 @@ class SerializerTest extends TestCase
     public function test_serializeWithModifier()
     {
         $serializer = new class extends Serializer{
-            use \serhiikamolov\Laravel\JsonApi\Traits\Serializer\Modifiers\Timestamp;
+            use \JsonAPI\Traits\Serializer\Modifiers\Timestamp;
 
             protected array $fields = [
                 'id',
@@ -135,13 +135,13 @@ class SerializerTest extends TestCase
      * @dataProvider serializeWithInvalidModifierProvider
      * @param array $fields
      * @param $expectedException
-     * @throws \serhiikamolov\Laravel\JsonApi\Exceptions\SerializerException
+     * @throws \JsonAPI\Exceptions\SerializerException
      */
     public function test_serializeWithInvalidModifier(array $fields, $expectedException)
     {
         $serializer = new Serializer($fields);
 
-        $this->expectException(\serhiikamolov\Laravel\JsonApi\Exceptions\SerializerException::class);
+        $this->expectException(\JsonAPI\Exceptions\SerializerException::class);
         $this->expectErrorMessage($expectedException);
         $serializer->serialize($this->model);
     }

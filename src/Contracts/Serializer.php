@@ -1,5 +1,5 @@
 <?php
-namespace serhiikamolov\Laravel\JsonApi\Contracts;
+namespace JsonAPI\Contracts;
 
 use Illuminate\Contracts\Support\Arrayable;
 

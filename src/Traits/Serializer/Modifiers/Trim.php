@@ -1,5 +1,5 @@
 <?php
-namespace serhiikamolov\Laravel\JsonApi\Traits\Serializer\Modifiers;
+namespace JsonAPI\Traits\Serializer\Modifiers;
 
 trait Trim
 {

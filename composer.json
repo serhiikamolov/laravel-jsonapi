@@ -23,13 +23,13 @@
             "src/"
         ],
         "psr-0": {
-            "serhiikamolov\\Laravel\\JsonApi\\": "src/"
+            "jsonAPI\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "serhiikamolov\\Laravel\\JsonApi\\ServiceProvider"
+                "JsonAPI\\ServiceProvider"
             ]
         }
     },

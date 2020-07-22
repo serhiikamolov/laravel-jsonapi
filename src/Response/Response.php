@@ -1,15 +1,15 @@
 <?php
-namespace serhiikamolov\Laravel\JsonApi\Response;
+namespace JsonAPI\Response;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
-use serhiikamolov\Laravel\JsonApi\Contracts\Serializer;
+use JsonAPI\Contracts\Serializer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 
-class Response extends JsonResponse implements \serhiikamolov\Laravel\JsonApi\Contracts\Response
+class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 {
 
     const JSONAPI_VERSION = '1.0';
@@ -199,7 +199,7 @@ class Response extends JsonResponse implements \serhiikamolov\Laravel\JsonApi\Co
      */
     protected function getSerializer(): Serializer
     {
-        return App::make(\serhiikamolov\Laravel\JsonApi\Response\Serializer::class);
+        return App::make(\JsonAPI\Response\Serializer::class);
     }
 
     /**

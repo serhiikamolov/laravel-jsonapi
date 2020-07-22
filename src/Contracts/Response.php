@@ -1,6 +1,6 @@
 <?php
 
-namespace serhiikamolov\Laravel\JsonApi\Contracts;
+namespace JsonAPI\Contracts;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 

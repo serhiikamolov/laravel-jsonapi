@@ -1,13 +1,13 @@
 <?php
 
-namespace serhiikamolov\Laravel\JsonApi\Response;
+namespace JsonAPI\Response;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use serhiikamolov\Laravel\JsonApi\Exceptions\SerializerException;
+use JsonAPI\Exceptions\SerializerException;
 
-class Serializer implements \serhiikamolov\Laravel\JsonApi\Contracts\Serializer
+class Serializer implements \JsonAPI\Contracts\Serializer
 {
     protected array $fields = [];
 
