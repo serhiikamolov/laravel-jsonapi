@@ -1,7 +1,5 @@
 <?php
-namespace serhiikamolov\Laravel\JsonApi;
-
-use Illuminate\Support\Facades\DB;
+namespace JsonAPI;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
