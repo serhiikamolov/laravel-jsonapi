@@ -6,7 +6,6 @@ use Throwable;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use JsonAPI\Response\Response;
 
@@ -41,14 +40,8 @@ class Handler extends ExceptionHandler
         parent::report($exception);
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param Throwable $e
-     * @return JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
-     */
-    public function render($request, Throwable $e)
+
+    protected function prepareJsonResponse($request, Throwable $e)
     {
         /** @var Response $response */
         $response = App::make(Response::class);
