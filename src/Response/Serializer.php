@@ -6,9 +6,14 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use JsonAPI\Exceptions\SerializerException;
+use JsonAPI\Traits\Serializer\Modifiers\Number;
+use JsonAPI\Traits\Serializer\Modifiers\Timestamp;
+use JsonAPI\Traits\Serializer\Modifiers\Trim;
 
 class Serializer implements \JsonAPI\Contracts\Serializer
 {
+    use Timestamp, Trim, Number;
+
     protected array $fields = [];
 
     /**
