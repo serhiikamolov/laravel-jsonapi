@@ -17,7 +17,15 @@ class Serializer implements \JsonAPI\Contracts\Serializer
      */
     public function __construct(?array $fields = null)
     {
-        $this->fields = $fields ?? $this->fields;
+        $this->fields = $fields ?? $this->fields();
+    }
+
+    /**
+     * @return array
+     */
+    public function fields():array
+    {
+        return $this->fields;
     }
 
     /**
