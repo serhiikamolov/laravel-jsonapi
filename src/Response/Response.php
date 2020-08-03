@@ -2,6 +2,8 @@
 namespace JsonAPI\Response;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use JsonAPI\Contracts\Serializer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -63,21 +65,22 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     }
 
     /**
-     * Return response with token
+     * Return response with JWT token
      *
      * @param string $token
      * @param string $type
      * @param int $expires
      * @return JsonResponse
      */
-    public function token(string $token, string $type = 'bearer', int $expires = 0):JsonResponse
+    public function token(string $token, string $type = 'bearer', int $expires = null):JsonResponse
     {
         return $this->data([
             'access_token' => $token,
             'token_type' => $type,
-            'expires_in' => $expires //auth()->factory()->getTTL() * 60
+            'expires_in' => $expires ?? Auth::factory()->getTTL() * 60
         ]);
     }
+
     /**
      * @param array $data
      * @return JsonResponse
@@ -87,6 +90,19 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
         $originalData = $this->getData(true);
         $originalData['data'] = $data;
         return $this->setData($originalData);
+    }
+
+    /**
+     * Attach field to the response's data
+     *
+     * @param string $key
+     * @param $value
+     * @return JsonResponse
+     */
+    public function attach(string $key, $value):JsonResponse
+    {
+        $originalData = $this->getData(true);
+        return $this->setData(Arr::add($originalData['data'], $key, $value));
     }
 
     /**
@@ -191,7 +207,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      */
     public function code(int $code): JsonResponse
     {
-        return $this->setStatusCode($code);
+        $this->setStatusCode($code);
+
+        return $this;
     }
 
     /**
