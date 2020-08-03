@@ -1,9 +1,9 @@
 <?php
-namespace JsonAPI\Traits;
+namespace JsonAPI\Traits\Tests;
 
 use Illuminate\Http\JsonResponse;
 
-trait Tests
+trait JsonApiAsserts
 {
     protected function assertJsonApiResponse(JsonResponse $response)
     {
