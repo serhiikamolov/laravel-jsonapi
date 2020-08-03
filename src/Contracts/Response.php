@@ -18,9 +18,9 @@ interface Response
 
     public function paginate();
 
-    public function code(int $code): JsonResponse;
+    public function code(int $code);
 
-    public function serialize($data, ?Serializer $serializer = null): JsonResponse;
+    public function serialize($data, ?Serializer $serializer = null);
 
-    public function token(string $token): JsonResponse;
+    public function token(string $token);
 }

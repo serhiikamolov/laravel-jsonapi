@@ -38,22 +38,24 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
     /**
      * @param array $links
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse | Response
      */
-    public function links(array $links)
+    public function links(array $links):Response
     {
         $originalData = $this->getData(true);
         $originalData['links'] = $originalData['links'] + $links;
 
-        return $this->setData($originalData);
+        $this->setData($originalData);
+
+        return $this;
     }
 
     /**
      * @param int $status
      * @param string $message
-     * @return JsonResponse
+     * @return JsonResponse | Response
      */
-    public function error(int $status, $message = ''): JsonResponse
+    public function error(int $status, $message = ''): Response
     {
         $data = $this->getData(true);
         $data["errors"] = is_array($message) ? $message : [$message];
@@ -61,7 +63,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
         $this->setStatusCode($status);
 
-        return $this->setData($data);
+        $this->setData($data);
+
+        return $this;
     }
 
     /**
@@ -70,39 +74,51 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param string $token
      * @param string $type
      * @param int $expires
-     * @return JsonResponse
+     * @return Response | JsonResponse
      */
-    public function token(string $token, string $type = 'bearer', int $expires = null):JsonResponse
+    public function token(string $token, string $type = 'bearer', int $expires = null):Response
     {
-        return $this->data([
+        $this->data([
             'access_token' => $token,
             'token_type' => $type,
             'expires_in' => $expires ?? Auth::factory()->getTTL() * 60
         ]);
+
+        return $this;
     }
 
     /**
      * @param array $data
-     * @return JsonResponse
+     * @return Response
      */
-    public function data(array $data=[]):JsonResponse
+    public function data(array $data=[]):Response
     {
         $originalData = $this->getData(true);
         $originalData['data'] = $data;
-        return $this->setData($originalData);
+        $this->setData($originalData);
+
+        return $this;
     }
 
     /**
      * Attach field to the response's data
      *
-     * @param string $key
+     * @param string|array $key
      * @param $value
-     * @return JsonResponse
+     * @return Response
      */
-    public function attach(string $key, $value):JsonResponse
+    public function attach($key, $value):Response
     {
         $originalData = $this->getData(true);
-        return $this->setData(Arr::add($originalData['data'], $key, $value));
+
+        if (is_array($key)) {
+            $originalData['data'] = array_merge($originalData['data'], $key);
+        }else {
+            $originalData['data'] = Arr::add($originalData['data'], $key, $value);
+        }
+        $this->setData($originalData);
+
+        return $this;
     }
 
     /**
@@ -123,11 +139,12 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param string $key
      * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function meta(array $data=[], string $key = 'meta')
+    public function meta(array $data=[], string $key = 'meta'):Response
     {
         $originalData = $this->getData(true);
         $originalData[$key] = array_merge($originalData[$key] ?? [], $data);
-        return $this->setData($originalData);
+        $this->setData($originalData);
+        return $this;
     }
 
     /**
@@ -179,9 +196,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     /**
      * @param Model|Collection|LengthAwarePaginator $data
      * @param Serializer|null $serializer
-     * @return JsonResponse
+     * @return JsonResponse | Response
      */
-    public function serialize($data, ?Serializer $serializer = null): JsonResponse
+    public function serialize($data, ?Serializer $serializer = null): Response
     {
         if (!$serializer) {
             $serializer = $this->getSerializer();
