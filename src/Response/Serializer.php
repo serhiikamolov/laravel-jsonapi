@@ -28,7 +28,7 @@ class Serializer implements \JsonAPI\Contracts\Serializer
     /**
      * @return array
      */
-    public function fields():array
+    public function fields(): array
     {
         return $this->fields;
     }
@@ -74,7 +74,12 @@ class Serializer implements \JsonAPI\Contracts\Serializer
         $row = [];
 
         if (!empty($this->fields)) {
-            foreach ($this->fields as $field) {
+            foreach ($this->fields as $key => $field) {
+
+                if (is_string($key)) {
+                    $field = "$key:$field";
+                }
+
                 $modifiers = $this->extractModifiers($field);
 
                 $row[$field] = $this->processModifiers(
@@ -114,11 +119,21 @@ class Serializer implements \JsonAPI\Contracts\Serializer
     {
         if ($value && !empty($modifiers)) {
             foreach ($modifiers as $modifier) {
-                $method = 'modifier' . ucfirst(trim($modifier));
-                if (method_exists($this, $method)) {
-                    $value = $this->$method($value);
+                // check whether a  serializer class given
+                if (class_exists($modifier)) {
+                    $serializer = new $modifier();
+                    if ($serializer instanceof \JsonAPI\Contracts\Serializer) {
+                        $value = $serializer->serialize($value);
+                    } else {
+                        throw new SerializerException("Invalid serializing class: $modifier");
+                    }
                 } else {
-                    throw new SerializerException("Invalid modifier: $modifier");
+                    $method = 'modifier' . ucfirst(trim($modifier));
+                    if (method_exists($this, $method)) {
+                        $value = $this->$method($value);
+                    } else {
+                        throw new SerializerException("Invalid modifier: $modifier");
+                    }
                 }
             }
         }
