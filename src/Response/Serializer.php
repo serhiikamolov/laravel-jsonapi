@@ -3,6 +3,7 @@
 namespace JsonAPI\Response;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use JsonAPI\Exceptions\SerializerException;
@@ -84,7 +85,8 @@ class Serializer implements \JsonAPI\Contracts\Serializer
 
                 $row[$field] = $this->processModifiers(
                     $this->callMethod($item, $field), // try to call a custom method first
-                    $modifiers
+                    $modifiers,
+                    $item
                 );
             }
         } else {
@@ -112,12 +114,13 @@ class Serializer implements \JsonAPI\Contracts\Serializer
     /**
      * @param $value
      * @param array $modifiers
-     * @return mixed
+     * @param Arrayable $item
+     * @return array|mixed
      * @throws SerializerException
      */
-    protected function processModifiers($value, array $modifiers = [])
+    protected function processModifiers($value = null, array $modifiers = [], Arrayable $item = null)
     {
-        if ($value && !empty($modifiers)) {
+        if (!empty($modifiers)) {
             foreach ($modifiers as $modifier) {
                 // check whether a  serializer class given
                 if (class_exists($modifier)) {
@@ -132,7 +135,12 @@ class Serializer implements \JsonAPI\Contracts\Serializer
                     if (method_exists($this, $method)) {
                         $value = $this->$method($value);
                     } else {
-                        throw new SerializerException("Invalid modifier: $modifier");
+                        if ($item) {
+                            $value = Arr::get($item, $modifier, null);
+                        }
+                        if (empty($value)) {
+                            throw new SerializerException("Invalid modifier: $modifier");
+                        }
                     }
                 }
             }
