@@ -42,8 +42,15 @@ class Serializer implements \JsonAPI\Contracts\Serializer
      */
     public function only(array $fields): \JsonAPI\Contracts\Serializer
     {
-        $this->fields = Arr::only($this->fields, $fields);
-        return $this;
+        $onlyFields = [];
+
+        foreach ($this->fields as $key => $value) {
+            if (in_array($key, $fields) || in_array($value, $fields)) {
+                $onlyFields[$key] = $value;
+            }
+        }
+
+        return $onlyFields;
     }
 
     /**
