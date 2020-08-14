@@ -35,6 +35,18 @@ class Serializer implements \JsonAPI\Contracts\Serializer
     }
 
     /**
+     * Limit the set of fields for serialization
+     *
+     * @param array $fields
+     * @return array
+     */
+    public function only(array $fields): \JsonAPI\Contracts\Serializer
+    {
+        $this->fields = Arr::only($this->fields, $fields);
+        return $this;
+    }
+
+    /**
      * @param Arrayable $data
      * @return array
      * @throws SerializerException
