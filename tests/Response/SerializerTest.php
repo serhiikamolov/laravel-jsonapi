@@ -58,7 +58,6 @@ class SerializerTest extends TestCase
                 'id',
                 'name',
                 'date',
-                'non_exist_method:timestamp'
             ];
 
             // add new property
@@ -80,7 +79,7 @@ class SerializerTest extends TestCase
         );
 
         $this->assertSame(
-            ['id' => 1, 'name' => 'John Doe', 'date' => 123456, 'non_exist_method' => null],
+            ['id' => 1, 'name' => 'John Doe', 'date' => 123456],
             $serializer->serialize($this->model)
         );
     }
@@ -88,7 +87,6 @@ class SerializerTest extends TestCase
     public function test_serializeWithModifier()
     {
         $serializer = new class extends Serializer{
-            use \JsonAPI\Traits\Serializer\Modifiers\Timestamp;
 
             protected array $fields = [
                 'id',
@@ -144,5 +142,17 @@ class SerializerTest extends TestCase
         $this->expectException(\JsonAPI\Exceptions\SerializerException::class);
         $this->expectErrorMessage($expectedException);
         $serializer->serialize($this->model);
+    }
+
+
+    public function test_serializeOnlyMethod()
+    {
+        $serializer = new Serializer(['id', 'firstname' => 'trim', 'lastname', 'date' => 'timestamp']);
+
+        $this->assertSame(
+            ['firstname' => 'John', 'lastname' => 'Doe'],
+            $serializer->only(['firstname', 'lastname'])->serialize($this->model),
+            'Array of fields is expected'
+        );
     }
 }

@@ -45,12 +45,14 @@ class Serializer implements \JsonAPI\Contracts\Serializer
         $onlyFields = [];
 
         foreach ($this->fields as $key => $value) {
-            if (in_array($key, $fields) || in_array($value, $fields)) {
+            if ((is_string($key) && in_array($key, $fields)) || in_array($value, $fields)) {
                 $onlyFields[$key] = $value;
             }
         }
 
-        return $onlyFields;
+        $this->fields = $onlyFields;
+
+        return $this;
     }
 
     /**
