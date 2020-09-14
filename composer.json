@@ -11,12 +11,12 @@
     ],
     "require": {
         "php": "^7.4",
-        "illuminate/http": "^7.0",
-        "illuminate/database": "^7.0",
-        "illuminate/pagination": "^7.0",
-        "illuminate/support": "^7.0",
-        "illuminate/routing": "^7.0",
-        "illuminate/auth": "^7.0"
+        "illuminate/http": "^7.0|^8",
+        "illuminate/database": "^7.0|^8",
+        "illuminate/pagination": "^7.0|^8",
+        "illuminate/support": "^7.0|^8",
+        "illuminate/routing": "^7.0|^8",
+        "illuminate/auth": "^7.0|^8"
     },
     "autoload": {
         "classmap": [
