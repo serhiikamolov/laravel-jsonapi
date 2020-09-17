@@ -16,7 +16,8 @@
         "illuminate/pagination": "^7.0|^8",
         "illuminate/support": "^7.0|^8",
         "illuminate/routing": "^7.0|^8",
-        "illuminate/auth": "^7.0|^8"
+        "illuminate/auth": "^7.0|^8",
+        "illuminate/testing": "^7.0|^8"
     },
     "autoload": {
         "classmap": [
