@@ -30,7 +30,7 @@ trait JsonApiAsserts
     /**
      * @param JsonResponse | TestResponse $response
      */
-    protected function assertJsonApiAuthResponse($response): void
+    protected function assertJsonApiAuthResponse($response)
     {
         $this->assertJsonApiResponse($response, [
             'access_token',
@@ -44,7 +44,7 @@ trait JsonApiAsserts
      * @param string $error
      * @return bool
      */
-    protected function assertJsonApiResponseError($response, string $error): void
+    protected function assertJsonApiResponseError($response, string $error)
     {
         $response = $response instanceof TestResponse ? $response->baseResponse : $response;
 
