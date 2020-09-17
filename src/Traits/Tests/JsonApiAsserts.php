@@ -22,10 +22,9 @@ trait JsonApiAsserts
 
         if (isset($data['data']) && $fields) {
             foreach ($fields as $field) {
-                $this->assertArrayHasKey(
-                    $field,
-                    isset($data['data']['items']) ? $data['data']['items'] : $data['data']
-                );
+                $items = isset($data['data']['items']) ? $data['data']['items'] : $data['data'];
+                $item = is_array($items[0]) ? $items[0] : $items;
+                $this->assertArrayHasKey($field, $item);
             }
         }
     }
