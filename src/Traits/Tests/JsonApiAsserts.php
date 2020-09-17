@@ -52,7 +52,14 @@ trait JsonApiAsserts
 
         $data = $response->getData(true);
         $this->assertArrayHasKey('errors', $data);
-        return in_array($error, $data['errors']);
+        $this->assertTrue(in_array($error, $data['errors']));
     }
 
+
+    protected function assertJsonApiErrors($response, array $errors)
+    {
+        $response = $response instanceof TestResponse ? $response->baseResponse : $response;
+        $data = $response->getData(true);
+        $this->assertEquals($data['errors'], $errors);
+    }
 }
