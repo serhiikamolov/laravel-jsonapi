@@ -21,9 +21,12 @@ trait JsonApiAsserts
         $this->assertTrue(isset($data['data']) || isset($data['errors']));
 
         if (isset($data['data']) && $fields) {
-            $this->assertEquals($fields, array_keys(
-                isset($data['data']['items']) ? $data['data']['items'] : $data['data']
-            ));
+            foreach ($fields as $field) {
+                $this->assertArrayHasKey(
+                    $field,
+                    isset($data['data']['items']) ? $data['data']['items'] : $data['data']
+                );
+            }
         }
     }
 
