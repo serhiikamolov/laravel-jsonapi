@@ -31,14 +31,15 @@ trait JsonApiAsserts
 
     /**
      * @param JsonResponse | TestResponse $response
+     * @param array|null $additionalFields
      */
-    protected function assertJsonApiAuthResponse($response)
+    protected function assertJsonApiAuthResponse($response, array $additionalFields = [])
     {
         $this->assertJsonApiResponse($response, [
             'access_token',
             'token_type',
             'expires_in'
-        ]);
+        ] + $additionalFields);
     }
 
     /**
