@@ -81,7 +81,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
         $this->data([
             'access_token' => $token,
             'token_type' => $type,
-            'expires_in' => $expires ?? Auth::factory()->getTTL() * 60
+            'expires_in' => $expires ?? Auth::guard('api')->factory()->getTTL() * 60
         ]);
 
         return $this;
