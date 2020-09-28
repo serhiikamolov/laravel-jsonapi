@@ -20,7 +20,7 @@ interface Response
 
     public function code(int $code);
 
-    public function serialize($data, ?Serializer $serializer = null);
+    public function serialize($data, $serializer = null);
 
     public function token(string $token);
 }
