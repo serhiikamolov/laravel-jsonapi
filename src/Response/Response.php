@@ -201,7 +201,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     public function serialize($data, $serializer = null): Response
     {
         if (!($serializer instanceof Serializer)) {
-            $serializer = $this->getSerializer($serializer);
+            $serializer = $this->getSerializer();
         }
 
         if ($data instanceof LengthAwarePaginator) {
@@ -230,12 +230,11 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     }
 
     /**
-     * @param array|null $fields
      * @return Serializer
      */
-    public function getSerializer(?array $fields = null): Serializer
+    public function getSerializer(): Serializer
     {
-        return App::make(\JsonAPI\Response\Serializer::class, ['fields' => $fields]);
+        return App::make(\JsonAPI\Response\Serializer::class);
     }
 
     /**
