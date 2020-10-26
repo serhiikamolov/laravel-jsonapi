@@ -18,6 +18,8 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
     const PAGINATION_LIMIT = 10;
 
+    protected string $serializer = \JsonAPI\Response\Serializer::class;
+
     /**
      * ApiResponse constructor.
      * @param mixed|null $data
@@ -236,7 +238,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      */
     protected function getSerializer(array $fields = null): Serializer
     {
-        return App::make(\JsonAPI\Response\Serializer::class, ['fields' => $fields]);
+        return App::make($this->serializer, ['fields' => $fields]);
     }
 
     /**
