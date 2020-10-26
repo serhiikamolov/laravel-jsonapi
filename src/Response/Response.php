@@ -193,6 +193,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
             'prev_page' => $paginator->previousPageUrl(),
         ]);
     }
+
     /**
      * @param Model|Collection|LengthAwarePaginator $data
      * @param Serializer|array|null $serializer
@@ -201,7 +202,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     public function serialize($data, $serializer = null): Response
     {
         if (!($serializer instanceof Serializer)) {
-            $serializer = $this->getSerializer();
+            $serializer = $this->getSerializer($serializer);
         }
 
         if ($data instanceof LengthAwarePaginator) {
@@ -230,11 +231,12 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     }
 
     /**
+     * @param array|null $fields
      * @return Serializer
      */
-    public function getSerializer(): Serializer
+    protected function getSerializer(array $fields = null): Serializer
     {
-        return App::make(\JsonAPI\Response\Serializer::class);
+        return App::make(\JsonAPI\Response\Serializer::class, ['fields' => $fields]);
     }
 
     /**
