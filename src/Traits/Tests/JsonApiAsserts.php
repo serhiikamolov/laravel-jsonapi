@@ -21,10 +21,24 @@ trait JsonApiAsserts
         $this->assertTrue(isset($data['data']) || isset($data['errors']));
 
         if (isset($data['data']) && $fields) {
-            foreach ($fields as $field) {
-                $items = isset($data['data']['items']) ? $data['data']['items'] : $data['data'];
-                $item = isset($items[0]) && is_array($items[0]) ? $items[0] : $items;
-                $this->assertArrayHasKey($field, $item);
+            $items = isset($data['data']['items']) ? $data['data']['items'] : $data['data'];
+            $item = isset($items[0]) && is_array($items[0]) ? $items[0] : $items;
+
+            $this->assertArrayHasKeys($fields, $item);
+        }
+    }
+
+    /**
+     * @param $keys
+     * @param $array
+     */
+    protected function assertArrayHasKeys($keys, $array)
+    {
+        foreach ($keys as $key => $field) {
+            if (is_array($field)) {
+                $this->assertArrayHasKeys($field, $array[$key]);
+            } else {
+                $this->assertArrayHasKey($field, $array);
             }
         }
     }
