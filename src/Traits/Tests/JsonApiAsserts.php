@@ -22,9 +22,8 @@ trait JsonApiAsserts
 
         if (isset($data['data']) && $fields) {
             $items = isset($data['data']['items']) ? $data['data']['items'] : $data['data'];
-            $item = isset($items[0]) && is_array($items[0]) ? $items[0] : $items;
 
-            $this->assertArrayHasKeys($fields, $item);
+            $this->assertJsonApiDataHasKey($fields, $items);
         }
     }
 
@@ -32,13 +31,17 @@ trait JsonApiAsserts
      * @param $keys
      * @param $array
      */
-    protected function assertArrayHasKeys($keys, $array)
+    protected function assertJsonApiDataHasKey($keys, $array)
     {
+        $array = isset($array[0]) && is_array($array[0]) ? $array[0] : $array;
         foreach ($keys as $key => $field) {
             if (is_array($field)) {
-                $this->assertArrayHasKeys($field, $array[$key]);
+                $this->assertArrayHasKey($key, $array);
+                $this->assertJsonApiDataHasKey($field, $array[$key]);
             } else {
-                $this->assertArrayHasKey($field, $array);
+                if (is_array($array)) {
+                    $this->assertArrayHasKey($field, $array);
+                }
             }
         }
     }
