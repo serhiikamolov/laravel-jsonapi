@@ -147,7 +147,7 @@ class Serializer implements \JsonAPI\Contracts\Serializer
                 if (class_exists($modifier)) {
                     $serializer = new $modifier();
                     if ($serializer instanceof \JsonAPI\Contracts\Serializer) {
-                        $value = $serializer->serialize($value);
+                        $value = $value ? $serializer->serialize($value) : null;
                     } else {
                         throw new SerializerException("Invalid serializing class: $modifier");
                     }
