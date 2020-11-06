@@ -40,9 +40,7 @@ trait JsonApiAsserts
                 $this->assertJsonApiDataHasKey($field, $array[$key]);
             } else {
                 $field = is_numeric($key) ? $field : $key;
-                if (is_array($array)) {
-                    $this->assertArrayHasKey($field, $array);
-                }
+                $this->assertArrayHasKey($field, $array ?? []);
             }
         }
     }
