@@ -144,13 +144,10 @@ class Serializer implements \JsonAPI\Contracts\Serializer
         if (!empty($modifiers)) {
             foreach ($modifiers as $modifier) {
                 // check whether a  serializer class given
-                if (class_exists($modifier)) {
-                    $serializer = new $modifier();
-                    if ($serializer instanceof \JsonAPI\Contracts\Serializer) {
-                        $value = $value ? $serializer->serialize($value) : null;
-                    } else {
-                        throw new SerializerException("Invalid serializing class: $modifier");
-                    }
+                $modifier = is_string($modifier) && class_exists($modifier) ? new $modifier() : $modifier;
+
+                if ($modifier instanceof \JsonAPI\Contracts\Serializer) {
+                    $value = $value ? $modifier->serialize($value) : null;
                 } else {
                     $method = 'modifier' . ucfirst(trim($modifier));
                     if (method_exists($this, $method)) {
