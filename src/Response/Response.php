@@ -127,9 +127,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * Add an additional debug information
      *
      * @param array $data
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse
+     * @return Response|\Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function debug(array $data=[])
+    public function debug(array $data=[]):Response
     {
         return $this->meta($data, 'debug');
     }
@@ -139,7 +139,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      *
      * @param array $data
      * @param string $key
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse
+     * @return Response|\Symfony\Component\HttpFoundation\JsonResponse
      */
     public function meta(array $data=[], string $key = 'meta'):Response
     {
@@ -153,7 +153,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param Collection $items
      * @return mixed
      */
-    public function paginate():JsonResponse
+    public function paginate():Response
     {
         $request = $this->getRequest();
 
@@ -223,9 +223,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * Add status code to the response
      *
      * @param int $code
-     * @return JsonResponse
+     * @return Response
      */
-    public function code(int $code): JsonResponse
+    public function code(int $code): Response
     {
         $this->setStatusCode($code);
 
