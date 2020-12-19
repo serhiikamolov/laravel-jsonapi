@@ -16,7 +16,7 @@ A set of interfaces and classes to facilitate the construction of an efficient J
 
 ## Installation
 This package is very easy to set up via Composer, just run from your project's root folder:
-```
+```bash
 composer require serhiikamolov/laravel-jsonapi
 ```
 
@@ -24,14 +24,14 @@ composer require serhiikamolov/laravel-jsonapi
 
 In order to get the errors list in json API format go to bootstrap/app.php and redefine the custom error handler 
 instead of the default one.
-```  
-    $app->singleton(
-       Illuminate\Contracts\Debug\ExceptionHandler::class,
-       \JsonAPI\Exceptions\Handler::class
-    );
+```php  
+$app->singleton(
+   Illuminate\Contracts\Debug\ExceptionHandler::class,
+   \JsonAPI\Exceptions\Handler::class
+);
 ```
 Example of a response with an error:
-```
+```json
 {
     "jsonapi": {
         "version": "1.0"
@@ -55,132 +55,137 @@ Example of a response with an error:
 ## Request validation class
 `\JsonAPI\Contracts\Request` is a simple extension of the `FormRequest` class that returns the validation errors in compatible with the json API form
 
-    namespace App\Http\Requests\Auth;
-    
-    use \JsonAPI\Contracts\Request;
+```php
+namespace App\Http\Requests\Auth;
 
-    class LoginRequest extends Request
+use \JsonAPI\Contracts\Request;
+
+class LoginRequest extends Request
+{
+
+    public function messages()
     {
-    
-        public function messages()
-        {
-            return [
-                'email.required'  => 'Значення e-mail не може бути порожнім',
-                'email.email'   => 'Значення e-mail не відповідає формату електронної пошти',
-                'email.max'     => 'Значення e-mail не має бути таким довгим',
-            ];
-        }
-        
-        /**
-         * Get the validation rules that apply to the request.
-         *
-         * @return array
-         */
-        public function rules():array
-        {
-            return [
-                'email' => 'required|email|max:255',
-                'password' => 'required|string',
-            ];
-        }
-    
+        return [
+            'email.required'  => 'Значення e-mail не може бути порожнім',
+            'email.email'   => 'Значення e-mail не відповідає формату електронної пошти',
+            'email.max'     => 'Значення e-mail не має бути таким довгим',
+        ];
     }
+    
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules():array
+    {
+        return [
+            'email' => 'required|email|max:255',
+            'password' => 'required|string',
+        ];
+    }
+
+}
+```
 
 Example of a controller with request validation:
 
-    namespace App\Http\Controllers;
-    
-    use JsonAPI\Response\Response;
-    use App\Http\Requests\Auth\LoginRequest;
-    
-    class AuthController extends Controller
+```php
+namespace App\Http\Controllers;
+
+use JsonAPI\Response\Response;
+use App\Http\Requests\Auth\LoginRequest;
+
+class AuthController extends Controller
+{
+    /**
+     * Request a JWT token
+     *
+     * @param LoginRequest $request
+     * @param Response $response
+     * @return JsonResponse
+     */
+    public function login(LoginRequest $request, Response  $response):Response
     {
-        /**
-         * Request a JWT token
-         *
-         * @param LoginRequest $request
-         * @param Response $response
-         * @return JsonResponse
-         */
-        public function login(LoginRequest $request, Response  $response):Response
-        {
-            // validation is passed, you can check the user credentials now
-            // and generate a JWT token 
-        }      
-    }
+        // validation is passed, you can check the user credentials now
+        // and generate a JWT token 
+    }      
+}
+```
         
 Validation result:
-
-    {
-        "jsonapi": {
-            "version": "1.0"
-        },
-        "links": {
-            "self": "http://127.0.0.1/api/v1/auth/login"
-        },
-        "errors": {
-            "email": [
-                "The email field is required."
-            ]
-        }
+```json
+{
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "links": {
+        "self": "http://127.0.0.1/api/v1/auth/login"
+    },
+    "errors": {
+        "email": [
+            "The email field is required."
+        ]
     }
+}
+```
 
 ## Response class
 `JsonAPI\Response\Response` is an exension of the `JsonResponse` class with some additional methods.
 
 **Add additional values to the links object of the response**
-```
+```php
 $response->links($array)
 ```
 
 **Return error with the specific code in the response**
-```
+```php
 $response->error($statusCode, $message)  
 ```
 
 **Return response with JWT token**
-```
+```php
 $response->token($token, $type = 'bearer', $expires = null)
 ```
 
 **Return a custom data object in the response**
-```
+```php
 $response->data($array)
 ```
 
 **Attach a field to the response's data object**
-```
+```php
 $response->attach($key, $value)
 ```
 
 **Add a debug information to the response object**
-```
+```php
 $response->debug($array)
 ```
 
 **Add a meta data to the response object**
-```
+```php
 $response->meta($array, $key = 'meta')
 ```
 
 **Serialize an eloquent collection or a data model**
-```
+```php
 $response->serialize($collection, $serializer = new Serializer())
 ```
 
 **Paginate a data array in the response**
-```
+```php
 $response->serialize($collection)->paginate()
 ```
 
 **Add a specific status code to the response**
-```
+```php
 $response->code($statusCode)
 ```
 
 `Response` class is an implementation of the Builder pattern thus you can use diffrent methods in a row:
 
-```
+```php
 public function login(LoginRequest $request, Response $response): Response
 {
     ...
@@ -191,7 +196,7 @@ public function login(LoginRequest $request, Response $response): Response
 ``` 
 
 Response result:
-```
+```json
 {
     "jsonapi": {
         "version": "1.0"
@@ -216,7 +221,7 @@ Serializer class gives you a powerful, generic way to control the output of your
 Let's create a simple serializer class extended from the `JsonAPI\Response\Serializer` class.
 There is a public method `fields()` which returns an array, and define a set of fields which will be retrieved from the given Collection or Model 
 and put to the response.
-```
+```php
 namespace App\Http\Serializers;
 
 use JsonAPI\Response\Serializer;
@@ -248,7 +253,7 @@ In such a way you can define any new field you need in the response or even over
 #### Using serializer in Controller
 There is `serialize` method in the `JsonAPI\Response\Response` class which accept a Serializer instance as a second parameter.
 
-```
+```php
 class UsersController extends Controller
 {
     /**
@@ -265,7 +270,7 @@ class UsersController extends Controller
 }
 ```
 Response result
-```
+```json
 {
     "jsonapi": {
         "version": "1.0"
@@ -280,6 +285,8 @@ Response result
             "email": "user@email.com",
             "uuid": "40e831349e594d8e944478a243ff463f"
         }
+    ]
+}
 ```
 
 #### Field modifiers  
@@ -287,7 +294,7 @@ Field modifiers can be applied to every field defined in serializer. Although, t
 you can define your own modifier by creating a `protected` method with the `modifier` prefix in its name.
 Also you can use another serializing class as a modifier, it can be useful when you have some related data to the original model.  
     
-```
+```php
 class UserSerializer extends Serializer
 {
     public function fields(): array
