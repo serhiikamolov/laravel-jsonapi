@@ -43,7 +43,7 @@ Now, in case of an exception you will get such a response:
         "self": "http://127.0.0.1/api/v1/auth/login"
     },
     "errors": {
-        "exception": [
+        "messages": [
             "Some internal exception"
         ]
     },

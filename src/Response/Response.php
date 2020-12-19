@@ -61,7 +61,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     public function error(int $status, $message = ''): Response
     {
         $data = $this->getData(true);
-        $data["errors"] = is_array($message) ? $message : [[$message]];
+        $data["errors"] = is_array($message) ? $message : ['messages' => [$message]];
         unset($data["data"]);
 
         $this->setStatusCode($status);
