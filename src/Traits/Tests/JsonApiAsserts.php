@@ -16,7 +16,6 @@ trait JsonApiAsserts
         $response = $response instanceof TestResponse ? $response->baseResponse : $response;
 
         $data = $response->getData(true);
-        $this->assertArrayHasKey('jsonapi', $data);
         $this->assertArrayHasKey('links', $data);
         $this->assertTrue(isset($data['data']) || isset($data['errors']));
 
