@@ -13,6 +13,11 @@ A set of interfaces and classes to facilitate the construction of an efficient J
 - [Request validation class](#request-validation-class)
 - [Response class](#response-class)
 - [Serializer class](#serializer-class)
+    - [Declaring Serializers](#declaring-serializers)
+    - [Using Model Serializers](#using-model-serializers)
+    - [Using Field Modifiers](#using-field-modifiers)
+- [Expand Response with the Queries Log](#expand-response-with-the-queries-log)
+- [Testing API Responses](#testing-api-responses)
 
 ## Installation
 This package is very easy to set up via Composer, just run from your project's root folder:
@@ -22,15 +27,16 @@ composer require serhiikamolov/laravel-jsonapi
 
 ## Custom error handler
 
-In order to get the errors list in json API format go to bootstrap/app.php and redefine the custom error handler 
-instead of the default one.
+In order to make errors output compatible with json API format go to `bootstrap/app.php` and register the custom error handler.
 ```php  
 $app->singleton(
    Illuminate\Contracts\Debug\ExceptionHandler::class,
-   \JsonAPI\Exceptions\Handler::class
+   ::class
 );
 ```
-Example of a response with an error:
+Or just extend default `App\Exceptions\Handler` from `\JsonAPI\Exceptions\Handler` class.
+
+Now, in case of an error you will get such a response:
 ```json
 {
     "jsonapi": {
@@ -113,7 +119,7 @@ class AuthController extends Controller
 }
 ```
         
-Validation result:
+Response with validation errors:
 ```json
 {
     "jsonapi": {
@@ -217,7 +223,7 @@ Response result:
 Serializers allow complex data such as Eloquent Collections and Model instances to be converted to a simple array that can be easily rendered into JSON.
 Serializer class gives you a powerful, generic way to control the output of your responses.
   
-#### Declaring serializers
+#### Declaring Serializers
 Let's create a simple serializer class extended from the `JsonAPI\Response\Serializer` class.
 There is a public method `fields()` which returns an array, and define a set of fields which will be retrieved from the given Collection or Model 
 and put to the response.
@@ -250,7 +256,7 @@ class UserSerializer extends Serializer
 Here you can notice that `uuid` is not taken from the database but generated from the model data.
 In such a way you can define any new field you need in the response or even override an existing field value.  
 
-#### Using serializer in Controller
+#### Using Model Serializers
 There is `serialize` method in the `JsonAPI\Response\Response` class which accept a Serializer instance as a second parameter.
 
 ```php
@@ -289,11 +295,11 @@ Response result
 }
 ```
 
-#### Field modifiers  
+#### Using Field Modifiers  
 Field modifiers can be applied to every field defined in serializer. Although, there are a few predefined modifiers: `timestamp`, `number`, `trim`
 you can define your own modifier by creating a `protected` method with the `modifier` prefix in its name.
 Also you can use another serializing class as a modifier, it can be useful when you have some related data to the original model.  
-    
+
 ```php
 class UserSerializer extends Serializer
 {
@@ -311,7 +317,7 @@ class UserSerializer extends Serializer
     }
 
      /**
-     * Define custom modifier which will transform user id from number to md5 hash.
+     * Define custom modifier which transforms user id to md5 hash.
      * @param int|null $value
      * @return int
      */
@@ -320,4 +326,96 @@ class UserSerializer extends Serializer
         return md5($value);
     }
 }
+```
+
+## Expand Response with the Queries Log
+Enable `JsonAPI\Http\Middleware\QueryDebug` middleware and expand the `debug` section of a response with the information from the queries log.  
+
+```php
+namespace App\Http;
+
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
+
+class Kernel extends HttpKernel
+{
+    protected $middlewareGroups = [
+        ...
+        'api' => [
+            ...
+            \JsonAPI\Http\Middleware\QueryDebug::class                  
+        ],
+        ...
+    ];
+}
+```
+
+Response with the queries log.
+
+```json
+{
+  "jsonapi": {
+        "version": "1.0"
+   },
+
+  ...
+,
+  "debug": {
+    "queries": {
+        "total": 2,
+        "list": [
+            {
+                "query": "select * from `users` where `id` = ? limit 1",
+                "bindings": [
+                    2
+                ],
+                "time": 20.81
+            },
+            {
+                "query": "select `roles`.*, `role_user`.`user_id` as `pivot_user_id`, `role_user`.`role_id` as `pivot_role_id`, `role_user`.`created_at` as `pivot_created_at`, `role_user`.`updated_at` as `pivot_updated_at` from `roles` inner join `role_user` on `roles`.`id` = `role_user`.`role_id` where `role_user`.`user_id` = ? and `roles`.`deleted_at` is null",
+                "bindings": [
+                    2
+                ],
+                "time": 73.97
+            }
+        ]
+    }
+  }
+}
+```
+
+## Testing API Responses
+Add `JsonAPI\Traits\Tests\JsonApiAsserts` trait to your default `TestCase` class and expand your tests with some useful asserts methods for testing API responses.
+
+```php
+namespace Tests;
+
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use JsonAPI\Traits\Tests\JsonApiAsserts;
+
+abstract class TestCase extends BaseTestCase
+{
+    use JsonApiAsserts;
+}
+```
+
+Example of using additional asserts:
+
+```php
+    /**
+     * Testing GET /api/v1/entries/<id>
+     */
+    public function test_read()
+    {
+        $response = $this->get("/api/v1/entries/1");
+
+        // expecting to get response in JSON:API format and 
+        // find "id", "value", "type", "active" fields within 
+        // a response's data
+        $this->assertJsonApiResponse($response, [
+            "id",
+            "value",
+            "type",
+            "active",
+        ]);
+    }
 ```
