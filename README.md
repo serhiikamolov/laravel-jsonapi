@@ -358,7 +358,7 @@ Response with the queries log.
    },
 
   ...
-,
+
   "debug": {
     "queries": {
         "total": 2,
