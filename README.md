@@ -31,23 +31,22 @@ In order to make errors output compatible with json API format go to `bootstrap/
 ```php  
 $app->singleton(
    Illuminate\Contracts\Debug\ExceptionHandler::class,
-   ::class
+   \JsonAPI\Exceptions\Handler::class
 );
 ```
-Or just extend default `App\Exceptions\Handler` from `\JsonAPI\Exceptions\Handler` class.
+Or just extend default `App\Exceptions\Handler` from `JsonAPI\Exceptions\Handler` class.
 
-Now, in case of an error you will get such a response:
+Now, in case of an exception you will get such a response:
 ```json
 {
-    "jsonapi": {
-        "version": "1.0"
-    },
     "links": {
         "self": "http://127.0.0.1/api/v1/auth/login"
     },
-    "errors": [
-        "Some internal exception"
-    ],
+    "errors": {
+        "exception": [
+            "Some internal exception"
+        ]
+    },
     "debug": {
         "message": "Some internal exception",
         "exception": "Exception",
@@ -122,9 +121,6 @@ class AuthController extends Controller
 Response with validation errors:
 ```json
 {
-    "jsonapi": {
-        "version": "1.0"
-    },
     "links": {
         "self": "http://127.0.0.1/api/v1/auth/login"
     },
@@ -204,9 +200,6 @@ public function login(LoginRequest $request, Response $response): Response
 Response result:
 ```json
 {
-    "jsonapi": {
-        "version": "1.0"
-    },
     "links": {
         "self": "http://127.0.0.1/api/v1/auth/login"
     },
@@ -278,9 +271,6 @@ class UsersController extends Controller
 Response result
 ```json
 {
-    "jsonapi": {
-        "version": "1.0"
-    },
     "links": {
         "self": "http://127.0.0.1/api/v1/users"
     },
@@ -353,12 +343,7 @@ Response with the queries log.
 
 ```json
 {
-  "jsonapi": {
-        "version": "1.0"
-   },
-
   ...
-
   "debug": {
     "queries": {
         "total": 2,

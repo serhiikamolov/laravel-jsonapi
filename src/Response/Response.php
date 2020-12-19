@@ -1,4 +1,5 @@
 <?php
+
 namespace JsonAPI\Response;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
@@ -30,7 +31,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     public function __construct(?array $data = null, int $status = 200, array $headers = [], int $options = 0)
     {
         parent::__construct([
-            'jsonapi'=> ['version' => static::JSONAPI_VERSION],
+            //'jsonapi'=> ['version' => static::JSONAPI_VERSION],
             'links' => [
                 'self' => App::make(UrlGenerator::class)->current()
             ],
@@ -42,7 +43,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param array $links
      * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse | Response
      */
-    public function links(array $links):Response
+    public function links(array $links): Response
     {
         $originalData = $this->getData(true);
         $originalData['links'] = $originalData['links'] + $links;
@@ -54,13 +55,13 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
     /**
      * @param int $status
-     * @param string $message
+     * @param string|array $message
      * @return JsonResponse | Response
      */
     public function error(int $status, $message = ''): Response
     {
         $data = $this->getData(true);
-        $data["errors"] = is_array($message) ? $message : [$message];
+        $data["errors"] = is_array($message) ? $message : [[$message]];
         unset($data["data"]);
 
         $this->setStatusCode($status);
@@ -78,7 +79,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param int $expires
      * @return Response | JsonResponse
      */
-    public function token(string $token, string $type = 'bearer', int $expires = null):Response
+    public function token(string $token, string $type = 'bearer', int $expires = null): Response
     {
         $this->data([
             'access_token' => $token,
@@ -93,7 +94,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param array $data
      * @return Response
      */
-    public function data(array $data=[]):Response
+    public function data(array $data = []): Response
     {
         $originalData = $this->getData(true);
         $originalData['data'] = $data;
@@ -109,13 +110,13 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param $value
      * @return Response
      */
-    public function attach($key, $value):Response
+    public function attach($key, $value): Response
     {
         $originalData = $this->getData(true);
 
         if (is_array($key)) {
             $originalData['data'] = array_merge($originalData['data'], $key);
-        }else {
+        } else {
             $originalData['data'] = Arr::add($originalData['data'], $key, $value);
         }
         $this->setData($originalData);
@@ -129,7 +130,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param array $data
      * @return Response|\Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function debug(array $data=[]):Response
+    public function debug(array $data = []): Response
     {
         return $this->meta($data, 'debug');
     }
@@ -141,7 +142,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param string $key
      * @return Response|\Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function meta(array $data=[], string $key = 'meta'):Response
+    public function meta(array $data = [], string $key = 'meta'): Response
     {
         $originalData = $this->getData(true);
         $originalData[$key] = array_merge($originalData[$key] ?? [], $data);
@@ -153,7 +154,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param Collection $items
      * @return mixed
      */
-    public function paginate():Response
+    public function paginate(): Response
     {
         $request = $this->getRequest();
 

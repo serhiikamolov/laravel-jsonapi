@@ -61,6 +61,6 @@ class Handler extends ExceptionHandler
             );
         }
 
-        return $response->error($status, $e->getMessage());
+        return $response->error($status, ['exception' => [$e->getMessage()]]);
     }
 }
