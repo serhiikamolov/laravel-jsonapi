@@ -1,6 +1,6 @@
 {
     "name": "serhiikamolov/laravel-jsonapi",
-    "description": "Set of interfaces and classes for building the most efficient JsonApi application",
+    "description": "A set of interfaces and classes to facilitate the construction of an efficient Json Api application with the Laravel framework.",
     "type": "library",
     "license": "MIT",
     "authors": [
