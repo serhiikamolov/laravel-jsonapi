@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\App;
 class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 {
 
-    const JSONAPI_VERSION = '1.0';
+    //const JSONAPI_VERSION = '1.0';
 
     const PAGINATION_LIMIT = 10;
 
@@ -184,17 +184,19 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      */
     protected function paginatorToData(LengthAwarePaginator $paginator, ?array $items = null)
     {
-        return $this->data([
-            'total' => $paginator->total(),
-            'current_page' => $paginator->currentPage(),
-            'per_page' => $paginator->count(),
-            'items' => $items ?? $paginator->items(),
-        ])->links([
-            'first_page' => $paginator->url(1),
-            'last_page' => $paginator->url($paginator->lastPage()),
-            'next_page' => $paginator->nextPageUrl(),
-            'prev_page' => $paginator->previousPageUrl(),
-        ]);
+        return $this
+            ->meta([
+                'total' => $paginator->total(),
+                'current_page' => $paginator->currentPage(),
+                'per_page' => $paginator->count(),
+            ])->data(
+                $items ?? $paginator->items()
+            )->links([
+                'first_page' => $paginator->url(1),
+                'last_page' => $paginator->url($paginator->lastPage()),
+                'next_page' => $paginator->nextPageUrl(),
+                'prev_page' => $paginator->previousPageUrl(),
+            ]);
     }
 
     /**
