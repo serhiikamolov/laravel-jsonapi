@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
+        "ext-json": "*",
         "illuminate/http": "^7.0|^8",
         "illuminate/database": "^7.0|^8",
         "illuminate/pagination": "^7.0|^8",
@@ -23,8 +24,8 @@
         "classmap": [
             "src/"
         ],
-        "psr-0": {
-            "jsonAPI\\": "src/"
+        "psr-4": {
+            "JsonAPI\\": "src/"
         }
     },
     "extra": {
