@@ -35,6 +35,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
             'links' => [
                 'self' => App::make(UrlGenerator::class)->current()
             ],
+            'meta' => [],
             'data' => $data
         ], $status, $headers, $options);
     }
@@ -210,6 +211,12 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
             $serializer = $this->getSerializer($serializer);
         }
 
+        if ($data instanceof \Illuminate\Support\Collection) {
+            $this->meta([
+                'total' => $data->count(),
+            ]);
+        }
+
         if ($data instanceof LengthAwarePaginator) {
 
             return $this->paginatorToData(
@@ -218,6 +225,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
             );
 
         } else {
+
             return $this->data($serializer->serialize($data));
         }
     }
