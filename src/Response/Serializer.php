@@ -99,14 +99,14 @@ class Serializer implements \JsonAPI\Contracts\Serializer
         if (!empty($this->fields)) {
             foreach ($this->fields as $key => $field) {
 
-                if (is_string($key)) {
-                    $field = "$key:$field";
-                }
-
-                $modifiers = $this->extractModifiers($field);
+                $modifiers = [];
+                $modifiers = $this->extractModifiers(is_string($key) && is_string($field) ? "$key:$field" : $field);
+                $field = is_string($key) ? $key : $field;
 
                 $row[$field] = $this->processModifiers(
-                    $this->callMethod($item, $field), // try to call a custom method first
+                    is_string($field)
+                        ? $this->callMethod($item, $field)
+                        : $this->callMethod($item, $key), // try to call a custom method first
                     $modifiers,
                     $item
                 );
@@ -169,21 +169,25 @@ class Serializer implements \JsonAPI\Contracts\Serializer
     }
 
     /**
-     * @param string $field
+     * @param mixed $field
      * @return array
      * @throws SerializerException
      */
-    protected function extractModifiers(string &$field): array
+    protected function extractModifiers(mixed $field): array
     {
-        $fieldParts = explode(":", $field);
-        $field = $fieldParts[0];
+        if (is_string($field)) {
+            $fieldParts = explode(":", $field);
+            $field = $fieldParts[0];
 
-        if (sizeof($fieldParts) === 1) {
-            return [];
-        } elseif (sizeof($fieldParts) > 2) {
-            throw new SerializerException("Invalid modifiers format: $field");
+            if (sizeof($fieldParts) === 1) {
+                return [];
+            } elseif (sizeof($fieldParts) > 2) {
+                throw new SerializerException("Invalid modifiers format: $field");
+            }
+
+            return explode(',', $fieldParts[1]);
         }
 
-        return explode(',', $fieldParts[1]);
+        return [$field];
     }
 }
