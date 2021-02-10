@@ -6,12 +6,7 @@ use Closure;
 use Illuminate\Support\Facades\DB;
 use JsonAPI\Contracts\Response;
 
-/**
- * Class QueryDebug
- * @package JsonAPI\Http\Middleware
- * @deprecated since v2.0.4
- */
-class QueryDebug
+class JsonApiDebug
 {
     public function handle($request, Closure $next)
     {
@@ -27,6 +22,7 @@ class QueryDebug
         if ($response instanceof Response) {
             $query = DB::getQueryLog();
             return $response->debug([
+                'request' => $request->input() ?? [],
                 'queries' => [
                     'total' =>  sizeof($query),
                     'list' => $query
