@@ -15,6 +15,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             \JsonAPI\Contracts\Response::class,
             \JsonAPI\Response\Response::class
         );
+
+        $this->app->singleton(\JsonAPI\Response\Response::class);
     }
 
     /**
