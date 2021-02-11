@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 use JsonAPI\Exceptions\SerializerException;
 use JsonAPI\Traits\Serializer\Modifiers\Json;
 use JsonAPI\Traits\Serializer\Modifiers\Number;
@@ -129,6 +130,8 @@ class Serializer implements \JsonAPI\Contracts\Serializer
     {
         if (method_exists($this, $field)) {
             return App::call([$this, $field], ['item' => $item]);
+        } else if (method_exists($this, Str::camel($field))) {
+            return App::call([$this, Str::camel($field)], ['item' => $item]);
         }
         return $item->$field;
     }
