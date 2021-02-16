@@ -203,9 +203,10 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     /**
      * @param Model|Collection|LengthAwarePaginator $data
      * @param Serializer|array|null $serializer
-     * @return JsonResponse | Response
+     * @param string $key
+     * @return $this
      */
-    public function serialize($data, $serializer = null): Response
+    public function serialize($data, $serializer = null, $key = 'data'): Response
     {
         if (!($serializer instanceof Serializer)) {
             $serializer = $this->getSerializer($serializer);
@@ -218,15 +219,12 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
         }
 
         if ($data instanceof LengthAwarePaginator) {
-
             return $this->paginatorToData(
                 $data,
                 $serializer->serialize($data->getCollection())
             );
-
         } else {
-
-            return $this->data($serializer->serialize($data));
+            return $this->meta($serializer->serialize($data), $key);
         }
     }
 
