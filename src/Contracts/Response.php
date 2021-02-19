@@ -2,8 +2,6 @@
 
 namespace JsonAPI\Contracts;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-
 interface Response
 {
     public function links(array $links);
@@ -23,4 +21,6 @@ interface Response
     public function serialize($data, $serializer = null);
 
     public function token(string $token);
+
+    public function unset($key);
 }

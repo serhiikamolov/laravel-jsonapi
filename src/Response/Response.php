@@ -152,6 +152,22 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     }
 
     /**
+     * Unset a given key from the response data
+     *
+     * @param $key
+     * @return $this
+     */
+    public function unset($key): Response
+    {
+        $originalData = $this->getData(true);
+        if (Arr::has($originalData, $key)) {
+            $originalData = Arr::except($originalData, $key);
+        }
+        $this->setData($originalData);
+        return $this;
+    }
+
+    /**
      * @param Collection $items
      * @return mixed
      */
