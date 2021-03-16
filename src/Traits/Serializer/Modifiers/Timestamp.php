@@ -7,10 +7,10 @@ trait Timestamp
 {
     /**
      * @param string|null $date
-     * @return int
+     * @return int|null
      */
-    protected function modifierTimestamp(?string $date): int
+    protected function modifierTimestamp(?string $date): ?int
     {
-        return Carbon::parse($date)->timestamp;
+        return $date ? Carbon::parse($date)->timestamp : null;
     }
 }
