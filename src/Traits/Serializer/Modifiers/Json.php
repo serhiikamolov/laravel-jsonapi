@@ -9,6 +9,6 @@ trait Json
      */
     protected function modifierJson(string $data): array
     {
-        return json_decode($data);
+        return json_decode($data, true);
     }
 }
