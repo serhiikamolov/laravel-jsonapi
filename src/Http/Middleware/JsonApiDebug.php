@@ -11,7 +11,8 @@ class JsonApiDebug
     public function handle($request, Closure $next)
     {
         if (!config('app.debug', false)) {
-            return $next($request)->unset('debug');
+            $response = $next($request);
+            return $response instanceof Response ? $response->unset('debug') : $response;
         }
 
         DB::enableQueryLog();
