@@ -5,10 +5,10 @@ trait Json
 {
     /**
      * @param string $data
-     * @return array
+     * @return array|null
      */
-    protected function modifierJson(string $data): array
+    protected function modifierJson(string $data):? array
     {
-        return json_decode($data, true);
+        return $data ? json_decode($data, true) : null;
     }
 }
