@@ -77,7 +77,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      *
      * @param string $token
      * @param string $type
-     * @param int $expires
+     * @param int|null $expires
      * @return Response | JsonResponse
      */
     public function token(string $token, string $type = 'bearer', int $expires = null): Response
@@ -272,5 +272,30 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     protected function getRequest()
     {
         return App::make('request');
+    }
+
+    /**
+     * @return $this
+     */
+    public function ok(): Response
+    {
+        return $this->code(Response::HTTP_OK);
+    }
+
+    /**
+     * @param string $message
+     * @return $this
+     */
+    public function notFound(string $message = 'Not found.'): Response
+    {
+        return $this->error(Response::HTTP_NOT_FOUND, $message);
+    }
+
+    /**
+     * @return $this
+     */
+    public function noContent(): Response
+    {
+        return $this->code(Response::HTTP_NO_CONTENT);
     }
 }
