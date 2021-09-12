@@ -4,11 +4,11 @@ namespace JsonAPI\Traits\Serializer\Modifiers;
 trait Json
 {
     /**
-     * @param string $data
-     * @return array
+     * @param string|null $data
+     * @return array|null
      */
-    protected function modifierJson(string $data): array
+    protected function modifierJson(?string $data):? array
     {
-        return json_decode($data);
+        return $data ? json_decode($data, true) : null;
     }
 }

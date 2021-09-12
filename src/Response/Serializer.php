@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use JsonAPI\Exceptions\SerializerException;
+use JsonAPI\Traits\Serializer\Modifiers\Boolean;
 use JsonAPI\Traits\Serializer\Modifiers\Json;
 use JsonAPI\Traits\Serializer\Modifiers\Number;
 use JsonAPI\Traits\Serializer\Modifiers\Timestamp;
@@ -15,7 +16,7 @@ use JsonAPI\Traits\Serializer\Modifiers\Trim;
 
 class Serializer implements \JsonAPI\Contracts\Serializer
 {
-    use Timestamp, Trim, Number, Json;
+    use Timestamp, Trim, Number, Json, Boolean;
 
     protected array $fields = [];
 
