@@ -319,7 +319,7 @@ class UserSerializer extends Serializer
 ```
 
 ## Expand Response with the Queries Log
-Enable `JsonAPI\Http\Middleware\QueryDebug` middleware and expand the `debug` section of a response with the information from the queries log.  
+Enable `JsonAPI\Http\Middleware\JsonApiDebug` middleware and expand the `debug` section of a response with the information from the queries log.  
 
 ```php
 namespace App\Http;
@@ -332,7 +332,7 @@ class Kernel extends HttpKernel
         ...
         'api' => [
             ...
-            \JsonAPI\Http\Middleware\QueryDebug::class                  
+            \JsonAPI\Http\Middleware\JsonApiDebug::class                  
         ],
         ...
     ];
