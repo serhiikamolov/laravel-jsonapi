@@ -64,12 +64,12 @@ class JsonApiDebug
         if ($response instanceof Response) {
             list($total, $queries) = $this->getQueryLog();
             return $response->debug([
-                'time' => ($timeEnd - $timeStart),
                 'request' => $request->input() ?? [],
                 'database' => [
                     'queries' => $total,
                     'connections' => $queries
-                ]
+                ],
+                'time' => (int)(($timeEnd - $timeStart) * 1000),
             ]);
         }
 
