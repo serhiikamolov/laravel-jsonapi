@@ -192,6 +192,6 @@ class Serializer implements \JsonAPI\Contracts\Serializer
             return explode(',', $fieldParts[1]);
         }
 
-        return [$field];
+        return is_array($field) ? $field : [$field];
     }
 }
