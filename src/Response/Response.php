@@ -139,14 +139,14 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     /**
      * Add a meta data to response
      *
-     * @param array $data
+     * @param array|string $data
      * @param string $key
      * @return Response|\Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function meta(array $data = [], string $key = 'meta'): Response
+    public function meta(array|string $data = [], string $key = 'meta'): Response
     {
         $originalData = $this->getData(true);
-        $originalData[$key] = array_merge($originalData[$key] ?? [], $data);
+        $originalData[$key] = is_array($data) ? array_merge($originalData[$key] ?? [], $data) : $data;
         $this->setData($originalData);
         return $this;
     }

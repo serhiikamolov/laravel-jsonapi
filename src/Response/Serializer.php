@@ -130,9 +130,9 @@ class Serializer implements \JsonAPI\Contracts\Serializer
     protected function callMethod(Arrayable $item, string $field)
     {
         if (method_exists($this, $field)) {
-            return App::call([$this, $field], ['item' => $item]);
+            return App::call([$this, $field], ['item' => $item, 'model' => $item]);
         } else if (method_exists($this, Str::camel($field))) {
-            return App::call([$this, Str::camel($field)], ['item' => $item]);
+            return App::call([$this, Str::camel($field)], ['item' => $item, 'model' => $item]);
         }
         return $item->$field;
     }
