@@ -2,6 +2,7 @@
 namespace JsonAPI\Traits\Serializer\Modifiers;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 
 trait Timestamp
 {
@@ -9,8 +10,15 @@ trait Timestamp
      * @param string|null $date
      * @return int|null
      */
-    protected function modifierTimestamp(?string $date): ?int
+    protected function modifierTimestamp(mixed $date): ?int
     {
-        return $date ? Carbon::parse($date)->timestamp : null;
+        if ($date instanceof CarbonImmutable) {
+            return $date->timestamp;
+        }
+        if (is_string($date)) {
+            return Carbon::parse($date)->timestamp;
+        }
+
+        return null;
     }
 }
