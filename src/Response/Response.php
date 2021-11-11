@@ -225,7 +225,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     public function serialize($data, $serializer = null, $key = 'data'): Response
     {
         if (!($serializer instanceof Serializer)) {
-            $serializer = $this->getSerializer($serializer);
+            $serializer = $this->serializer($serializer);
         }
 
         if ($data instanceof \Illuminate\Support\Collection) {
@@ -259,9 +259,19 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
     /**
      * @param array|null $fields
+     * @deprecated
      * @return Serializer
      */
     protected function getSerializer(array $fields = null): Serializer
+    {
+        return $this->serializer($fields);
+    }
+
+    /**
+     * @param array|null $fields
+     * @return Serializer
+     */
+    protected function serializer(array $fields = null): Serializer
     {
         return App::make($this->serializer, ['fields' => $fields]);
     }
