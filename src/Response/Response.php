@@ -171,7 +171,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param Collection $items
      * @return mixed
      */
-    public function paginate(): Response
+    public function paginate(): mixed
     {
         $request = $this->getRequest();
 
