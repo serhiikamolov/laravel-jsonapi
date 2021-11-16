@@ -2,14 +2,14 @@
 
 namespace JsonAPI\Response;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use JsonAPI\Contracts\Serializer;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 
 class Response extends JsonResponse implements \JsonAPI\Contracts\Response
@@ -187,7 +187,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentItems = array_slice($items, $perPage * ($currentPage - 1), $perPage);
 
-        $paginator = new LengthAwarePaginator($currentItems, count($items), $perPage, $currentPage);
+        $paginator = new \Illuminate\Pagination\LengthAwarePaginator($currentItems, count($items), $perPage, $currentPage);
         $paginator->appends('limit', request('limit'));
         $paginator->setPath(url()->current());
 
