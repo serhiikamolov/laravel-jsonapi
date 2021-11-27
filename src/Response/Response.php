@@ -44,7 +44,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param array $links
      * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse | Response
      */
-    public function links(array $links): Response
+    public function links(array $links): static
     {
         $originalData = $this->getData(true);
         $originalData['links'] = $originalData['links'] + $links;
@@ -59,7 +59,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param string|array $message
      * @return JsonResponse | Response
      */
-    public function error(int $status, $message = ''): Response
+    public function error(int $status, $message = ''): static
     {
         $data = $this->getData(true);
         $data["errors"] = is_array($message) ? $message : ['messages' => [$message]];
@@ -78,9 +78,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param string $token
      * @param string $type
      * @param int|null $expires
-     * @return Response | JsonResponse
+     * @return $this | JsonResponse
      */
-    public function token(string $token, string $type = 'bearer', int $expires = null): Response
+    public function token(string $token, string $type = 'bearer', int $expires = null): static
     {
         $this->data([
             'access_token' => $token,
@@ -93,9 +93,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
     /**
      * @param array $data
-     * @return Response
+     * @return $this
      */
-    public function data(array $data = []): Response
+    public function data(array $data = []): static
     {
         $originalData = $this->getData(true);
         $originalData['data'] = $data;
@@ -109,9 +109,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      *
      * @param string|array $key
      * @param $value
-     * @return Response
+     * @return $this
      */
-    public function attach($key, $value): Response
+    public function attach($key, $value): static
     {
         $originalData = $this->getData(true);
 
@@ -129,9 +129,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * Add an additional debug information
      *
      * @param array $data
-     * @return Response|\Symfony\Component\HttpFoundation\JsonResponse
+     * @return $this|\Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function debug(array $data = []): Response
+    public function debug(array $data = []): static
     {
         return $this->meta($data, 'debug');
     }
@@ -141,9 +141,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      *
      * @param array|string $data
      * @param string $key
-     * @return Response|\Symfony\Component\HttpFoundation\JsonResponse
+     * @return $this|\Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function meta(array|string $data = [], string $key = 'meta'): Response
+    public function meta(array|string $data = [], string $key = 'meta'): static
     {
         $originalData = $this->getData(true);
         $originalData[$key] = is_array($data) ? array_merge($originalData[$key] ?? [], $data) : $data;
@@ -157,7 +157,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param $key
      * @return $this
      */
-    public function unset($key): Response
+    public function unset($key): static
     {
         $originalData = $this->getData(true);
         if (Arr::has($originalData, $key)) {
@@ -222,7 +222,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param string $key
      * @return $this
      */
-    public function serialize($data, $serializer = null, $key = 'data'): Response
+    public function serialize($data, $serializer = null, $key = 'data'): static
     {
         if (!($serializer instanceof Serializer)) {
             $serializer = $this->serializer($serializer);
@@ -248,9 +248,9 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * Add status code to the response
      *
      * @param int $code
-     * @return Response
+     * @return $this
      */
-    public function code(int $code): Response
+    public function code(int $code): static
     {
         $this->setStatusCode($code);
 
@@ -287,7 +287,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     /**
      * @return $this
      */
-    public function ok(): Response
+    public function ok(): static
     {
         return $this->code(Response::HTTP_OK);
     }
@@ -296,7 +296,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param string $message
      * @return $this
      */
-    public function notFound(string $message = 'Not found.'): Response
+    public function notFound(string $message = 'Not found.'): static
     {
         return $this->error(Response::HTTP_NOT_FOUND, $message);
     }
@@ -304,7 +304,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     /**
      * @return $this
      */
-    public function noContent(): Response
+    public function noContent(): static
     {
         return $this->code(Response::HTTP_NO_CONTENT);
     }
