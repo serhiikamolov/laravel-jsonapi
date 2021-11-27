@@ -57,7 +57,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     /**
      * @param int $status
      * @param string|array $message
-     * @return JsonResponse | Response
+     * @return $this
      */
     public function error(int $status, $message = ''): static
     {
