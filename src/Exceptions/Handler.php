@@ -5,6 +5,7 @@ namespace JsonAPI\Exceptions;
 use Throwable;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\ItemNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\App;
 use JsonAPI\Response\Response;
@@ -51,7 +52,7 @@ class Handler extends ExceptionHandler
             $status = Response::HTTP_UNAUTHORIZED;
         }
 
-        if ($e instanceof ModelNotFoundException) {
+        if ($e instanceof ModelNotFoundException || $e instanceof ItemNotFoundException) {
             $status = Response::HTTP_NOT_FOUND;
         }
 
