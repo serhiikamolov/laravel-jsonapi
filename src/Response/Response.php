@@ -4,6 +4,7 @@ namespace JsonAPI\Response;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use JsonAPI\Contracts\Serializer;
@@ -184,7 +185,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
         $perPage = $request->get('limit', self::PAGINATION_LIMIT);
 
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentPage = Paginator::resolveCurrentPage();
         $currentItems = array_slice($items, $perPage * ($currentPage - 1), $perPage);
 
         $paginator = new \Illuminate\Pagination\LengthAwarePaginator($currentItems, count($items), $perPage, $currentPage);
