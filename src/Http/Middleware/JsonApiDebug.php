@@ -65,7 +65,7 @@ class JsonApiDebug
             list($total, $queries) = $this->getQueryLog();
             return $response->debug([
                 'request' => [
-                    'path' => $request->path(),
+                    'uri' => $request->getRequestUri(),
                     'parameters' => $request->input() ?? [],
                 ],
                 'database' => [
