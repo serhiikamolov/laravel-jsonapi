@@ -263,7 +263,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @deprecated
      * @return Serializer
      */
-    protected function getSerializer(array $fields = null): Serializer
+    protected function getSerializer(?array $fields = null): Serializer
     {
         return $this->serializer($fields);
     }
@@ -272,7 +272,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param array|null $fields
      * @return Serializer
      */
-    protected function serializer(array $fields = null): Serializer
+    protected function serializer(?array $fields = null): Serializer
     {
         return App::make($this->serializer, ['fields' => $fields]);
     }
