@@ -146,7 +146,7 @@ class Serializer implements \JsonAPI\Contracts\Serializer
      * @return array|mixed
      * @throws SerializerException
      */
-    protected function processModifiers($value = null, array $modifiers = [], Arrayable $item = null)
+    protected function processModifiers($value = null, array $modifiers = [], ?Arrayable $item = null)
     {
         if (!empty($modifiers)) {
             foreach ($modifiers as $modifier) {

@@ -11,7 +11,7 @@ trait JsonApiAsserts
      * @param JsonResponse | TestResponse $response
      * @param array|null $fields
      */
-    protected function assertJsonApiResponse($response, array $fields = null)
+    protected function assertJsonApiResponse($response, ?array $fields = null)
     {
         $response = $response instanceof TestResponse ? $response->baseResponse : $response;
 

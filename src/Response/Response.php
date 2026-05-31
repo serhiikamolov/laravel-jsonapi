@@ -81,7 +81,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param int|null $expires
      * @return $this | JsonResponse
      */
-    public function token(string $token, string $type = 'bearer', int $expires = null): static
+    public function token(string $token, string $type = 'bearer', ?int $expires = null): static
     {
         $this->data([
             'access_token' => $token,
