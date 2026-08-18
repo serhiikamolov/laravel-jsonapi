@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
             $status = Response::HTTP_NOT_FOUND;
         }
 
-        if (env('APP_DEBUG')) {
+        if (config('app.debug', false)) {
             $response->debug(
                 $this->convertExceptionToArray($e)
             );

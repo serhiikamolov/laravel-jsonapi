@@ -206,7 +206,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
             ->meta([
                 'total' => $paginator->total(),
                 'current_page' => $paginator->currentPage(),
-                'per_page' => $paginator->count(),
+                'per_page' => $paginator->perPage(),
             ])->data(
                 $items ?? $paginator->items()
             )->links([
