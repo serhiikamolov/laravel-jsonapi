@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel JsonAPI">
+    <description>Project coding standard.</description>
+
+    <file>src</file>
+    <file>tests</file>
+
+    <arg name="colors"/>
+    <arg value="p"/>
+
+    <rule ref="PSR12">
+        <exclude name="PSR1.Classes.ClassDeclaration"/>
+        <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+    </rule>
+</ruleset>

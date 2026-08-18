@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 use JsonAPI\Traits\RequestRawOrder;
 use PHPUnit\Framework\TestCase;
@@ -10,7 +12,7 @@ class RequestRawOrderTest extends TestCase
         $request = new class {
             use RequestRawOrder;
 
-            public string $order = '-created_at';
+            public ?string $order = '-created_at';
         };
 
         $this->assertSame('id asc', $request->getRawOrder());
@@ -21,7 +23,7 @@ class RequestRawOrderTest extends TestCase
         $request = new class {
             use RequestRawOrder;
 
-            public string $order = '-created_at,name';
+            public ?string $order = '-created_at,name';
 
             protected function rawOrderFields(): array
             {
@@ -37,7 +39,7 @@ class RequestRawOrderTest extends TestCase
         $request = new class {
             use RequestRawOrder;
 
-            public string $order = '-created_at,password';
+            public ?string $order = '-created_at,password';
 
             protected function rawOrderFields(): array
             {

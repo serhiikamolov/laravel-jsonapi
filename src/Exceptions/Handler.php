@@ -9,6 +9,7 @@ use Illuminate\Support\ItemNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\App;
 use JsonAPI\Response\Response;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class Handler extends ExceptionHandler
 {
@@ -36,17 +37,17 @@ class Handler extends ExceptionHandler
      *
      * @param Throwable $exception
      */
-    public function report(Throwable $exception)
+    public function report(Throwable $exception): void
     {
         parent::report($exception);
     }
 
 
-    protected function prepareJsonResponse($request, Throwable $e)
+    protected function prepareJsonResponse($request, Throwable $e): Response
     {
         /** @var Response $response */
         $response = App::make(Response::class);
-        $status = $this->isHttpException($e) ? $e->getStatusCode() : 500;
+        $status = $e instanceof HttpExceptionInterface ? $e->getStatusCode() : 500;
 
         if ($e instanceof AuthenticationException) {
             $status = Response::HTTP_UNAUTHORIZED;

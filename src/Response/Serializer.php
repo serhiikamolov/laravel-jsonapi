@@ -16,7 +16,11 @@ use JsonAPI\Traits\Serializer\Modifiers\Trim;
 
 class Serializer implements \JsonAPI\Contracts\Serializer
 {
-    use Timestamp, Trim, Number, Json, Boolean;
+    use Timestamp;
+    use Trim;
+    use Number;
+    use Json;
+    use Boolean;
 
     protected array $fields = [];
 
@@ -30,7 +34,6 @@ class Serializer implements \JsonAPI\Contracts\Serializer
     }
 
     /**
-     * @return array
      */
     public function fields(): array
     {
@@ -41,7 +44,7 @@ class Serializer implements \JsonAPI\Contracts\Serializer
      * Limit the set of fields for serialization
      *
      * @param array $fields
-     * @return array
+     * @return \JsonAPI\Contracts\Serializer
      */
     public function only(array $fields): \JsonAPI\Contracts\Serializer
     {
@@ -77,7 +80,7 @@ class Serializer implements \JsonAPI\Contracts\Serializer
      * @return array
      * @throws SerializerException
      */
-    protected function processCollection(Collection $collection)
+    protected function processCollection(Collection $collection): array
     {
         $result = [];
         if ($collection->count()) {
@@ -91,16 +94,14 @@ class Serializer implements \JsonAPI\Contracts\Serializer
 
     /**
      * @param Arrayable $item
-     * @return mixed
      * @throws SerializerException
      */
-    protected function processItem(Arrayable $item)
+    protected function processItem(Arrayable $item): array
     {
         $row = [];
 
         if (!empty($this->fields)) {
             foreach ($this->fields as $key => $field) {
-
                 $modifiers = [];
                 $modifiers = $this->extractModifiers(is_string($key) && is_string($field) ? "$key:$field" : $field);
                 $field = is_string($key) ? $key : $field;
@@ -127,13 +128,13 @@ class Serializer implements \JsonAPI\Contracts\Serializer
      * @param string $field
      * @return mixed
      */
-    protected function callMethod(Arrayable $item, string $field)
+    protected function callMethod(Arrayable $item, string $field): mixed
     {
         $fieldCamelCase = Str::camel($field);
 
         if (method_exists($this, $field)) {
             return App::call([$this, $field], ['item' => $item, 'model' => $item]);
-        } else if (method_exists($this, $fieldCamelCase)) {
+        } elseif (method_exists($this, $fieldCamelCase)) {
             return App::call([$this, $fieldCamelCase], ['item' => $item, 'model' => $item]);
         }
         return $item->$field ?? $item->$fieldCamelCase;
@@ -146,7 +147,7 @@ class Serializer implements \JsonAPI\Contracts\Serializer
      * @return array|mixed
      * @throws SerializerException
      */
-    protected function processModifiers($value = null, array $modifiers = [], ?Arrayable $item = null)
+    protected function processModifiers(mixed $value = null, array $modifiers = [], ?Arrayable $item = null): mixed
     {
         if (!empty($modifiers)) {
             foreach ($modifiers as $modifier) {
@@ -161,7 +162,7 @@ class Serializer implements \JsonAPI\Contracts\Serializer
                         $value = $this->$method($value);
                     } else {
                         if ($item) {
-                            $value = Arr::get($item, $modifier, null);
+                            $value = Arr::get($item->toArray(), $modifier, null);
                         }
                         if (empty($value)) {
                             throw new SerializerException("Invalid modifier: $modifier");

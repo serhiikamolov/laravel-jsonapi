@@ -45,7 +45,7 @@ class JsonApiDebug
         return [$total, $queryLog];
     }
 
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next): mixed
     {
         if (!config('app.debug', false)) {
             $response = $next($request);
@@ -56,7 +56,6 @@ class JsonApiDebug
 
         $this->enableQueryLog();
 
-        /** @var Response $response */
         $response = $next($request);
 
         $timeEnd = microtime(true);

@@ -1,4 +1,5 @@
 <?php
+
 namespace JsonAPI\Contracts;
 
 use Illuminate\Contracts\Validation\Validator;
@@ -14,7 +15,7 @@ abstract class Request extends \Illuminate\Foundation\Http\FormRequest
      *
      * @return bool
      */
-    public function authorize():bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -23,7 +24,7 @@ abstract class Request extends \Illuminate\Foundation\Http\FormRequest
      * Get the values of the validated fields only
      * @return array
      */
-    public function values():array
+    public function values(): array
     {
         return Arr::only($this->input(), array_keys($this->rules()));
     }
@@ -31,7 +32,8 @@ abstract class Request extends \Illuminate\Foundation\Http\FormRequest
     /**
      * @param Validator $validator
      */
-    protected function failedValidation(Validator $validator) {
+    protected function failedValidation(Validator $validator): void
+    {
         $response = App::make(Response::class);
         throw new HttpResponseException(
             $response->error(

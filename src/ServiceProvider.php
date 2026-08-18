@@ -1,4 +1,5 @@
 <?php
+
 namespace JsonAPI;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -8,7 +9,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         // default response class
         $this->app->bind(
@@ -24,7 +25,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         //
     }

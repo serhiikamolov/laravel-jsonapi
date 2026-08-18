@@ -1,4 +1,5 @@
 <?php
+
 namespace JsonAPI\Traits;
 
 trait RequestRawOrder

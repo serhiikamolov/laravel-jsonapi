@@ -2,8 +2,9 @@
 
 namespace JsonAPI\Response;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -15,16 +16,15 @@ use Illuminate\Support\Facades\App;
 
 class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 {
-
     //const JSONAPI_VERSION = '1.0';
 
-    const PAGINATION_LIMIT = 10;
+    public const PAGINATION_LIMIT = 10;
 
     protected string $serializer = \JsonAPI\Response\Serializer::class;
 
     /**
      * ApiResponse constructor.
-     * @param mixed|null $data
+     * @param array|null $data
      * @param int $status
      * @param array $headers
      * @param int $options
@@ -43,7 +43,6 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
     /**
      * @param array $links
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\JsonResponse | Response
      */
     public function links(array $links): static
     {
@@ -58,9 +57,8 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     /**
      * @param int $status
      * @param string|array $message
-     * @return $this
      */
-    public function error(int $status, $message = ''): static
+    public function error(int $status, string|array $message = ''): static
     {
         $data = $this->getData(true);
         $data["errors"] = is_array($message) ? $message : ['messages' => [$message]];
@@ -79,14 +77,15 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param string $token
      * @param string $type
      * @param int|null $expires
-     * @return $this | JsonResponse
      */
     public function token(string $token, string $type = 'bearer', ?int $expires = null): static
     {
+        $guard = Auth::guard('api');
+
         $this->data([
             'access_token' => $token,
             'token_type' => $type,
-            'expires_in' => $expires ?? Auth::guard('api')->factory()->getTTL() * 60
+            'expires_in' => $expires ?? (method_exists($guard, 'factory') ? $guard->factory()->getTTL() * 60 : null)
         ]);
 
         return $this;
@@ -112,7 +111,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param $value
      * @return $this
      */
-    public function attach($key, $value): static
+    public function attach(string|array $key, mixed $value): static
     {
         $originalData = $this->getData(true);
 
@@ -130,7 +129,6 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * Add an additional debug information
      *
      * @param array $data
-     * @return $this|\Symfony\Component\HttpFoundation\JsonResponse
      */
     public function debug(array $data = []): static
     {
@@ -142,7 +140,6 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      *
      * @param array|string $data
      * @param string $key
-     * @return $this|\Symfony\Component\HttpFoundation\JsonResponse
      */
     public function meta(array|string $data = [], string $key = 'meta'): static
     {
@@ -158,7 +155,7 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param $key
      * @return $this
      */
-    public function unset($key): static
+    public function unset(string|array $key): static
     {
         $originalData = $this->getData(true);
         if (Arr::has($originalData, $key)) {
@@ -169,8 +166,6 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     }
 
     /**
-     * @param Collection $items
-     * @return mixed
      */
     public function paginate(): mixed
     {
@@ -188,9 +183,14 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
         $currentPage = Paginator::resolveCurrentPage();
         $currentItems = array_slice($items, $perPage * ($currentPage - 1), $perPage);
 
-        $paginator = new \Illuminate\Pagination\LengthAwarePaginator($currentItems, count($items), $perPage, $currentPage);
-        $paginator->appends('limit', request('limit'));
-        $paginator->setPath(url()->current());
+        $paginator = new LengthAwarePaginator(
+            $currentItems,
+            count($items),
+            $perPage,
+            $currentPage
+        );
+        $paginator->appends('limit', $request->get('limit'));
+        $paginator->setPath($request->url());
 
         return $this->paginatorToData($paginator);
     }
@@ -198,9 +198,8 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
     /**
      * @param LengthAwarePaginator $paginator
      * @param array|null $items
-     * @return mixed
      */
-    protected function paginatorToData(LengthAwarePaginator $paginator, ?array $items = null)
+    protected function paginatorToData(LengthAwarePaginator $paginator, ?array $items = null): static
     {
         return $this
             ->meta([
@@ -221,10 +220,12 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
      * @param Model|Collection|LengthAwarePaginator $data
      * @param Serializer|array|null $serializer
      * @param string $key
-     * @return $this
      */
-    public function serialize($data, $serializer = null, $key = 'data'): static
-    {
+    public function serialize(
+        Model|Collection|LengthAwarePaginator $data,
+        Serializer|array|null $serializer = null,
+        string $key = 'data'
+    ): static {
         if (!($serializer instanceof Serializer)) {
             $serializer = $this->serializer($serializer);
         }
@@ -247,9 +248,6 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
     /**
      * Add status code to the response
-     *
-     * @param int $code
-     * @return $this
      */
     public function code(int $code): static
     {
@@ -277,17 +275,11 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
         return App::make($this->serializer, ['fields' => $fields]);
     }
 
-    /**
-     * @return mixed
-     */
-    protected function getRequest()
+    protected function getRequest(): Request
     {
         return App::make('request');
     }
 
-    /**
-     * @return $this
-     */
     public function ok(): static
     {
         return $this->code(Response::HTTP_OK);
@@ -295,16 +287,12 @@ class Response extends JsonResponse implements \JsonAPI\Contracts\Response
 
     /**
      * @param string $message
-     * @return $this
      */
     public function notFound(string $message = 'Not found.'): static
     {
         return $this->error(Response::HTTP_NOT_FOUND, $message);
     }
 
-    /**
-     * @return $this
-     */
     public function noContent(): static
     {
         return $this->code(Response::HTTP_NO_CONTENT);

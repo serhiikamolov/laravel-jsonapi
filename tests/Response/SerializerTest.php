@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use JsonAPI\Response\Serializer;
@@ -16,21 +18,21 @@ class SerializerTest extends TestCase
     {
         parent::setUp();
 
-        $model = new class extends Model {};
-        $model->id = 1;
-        $model->firstname = 'John';
-        $model->lastname = 'Doe';
-        $model->date = Carbon::now();
+        $model = new class extends Model {
+        };
+        $model->setAttribute('id', 1);
+        $model->setAttribute('firstname', 'John');
+        $model->setAttribute('lastname', 'Doe');
+        $model->setAttribute('date', Carbon::now());
 
         $this->model = $model;
 
         $this->collection = new Collection([
            $model, $model
         ]);
-
     }
 
-    public function test_serializeModel()
+    public function test_serializeModel(): void
     {
         $serializer = new Serializer();
         $this->assertSame(
@@ -40,7 +42,7 @@ class SerializerTest extends TestCase
         );
     }
 
-    public function test_serializeCollection()
+    public function test_serializeCollection(): void
     {
         $serializer = new Serializer();
 
@@ -51,7 +53,7 @@ class SerializerTest extends TestCase
         );
     }
 
-    public function test_serializeWithMethods()
+    public function test_serializeWithMethods(): void
     {
         $serializer = new class extends Serializer{
             protected array $fields = [
@@ -61,13 +63,13 @@ class SerializerTest extends TestCase
             ];
 
             // add new property
-            public function name(Model $item):string
+            public function name(Model $item): string
             {
-                return $item->firstname . " " . $item->lastname;
+                return $item->getAttribute('firstname') . " " . $item->getAttribute('lastname');
             }
 
             // override exist property
-            public function date(Model $item):int
+            public function date(Model $item): int
             {
                 return 123456;
             }
@@ -84,10 +86,9 @@ class SerializerTest extends TestCase
         );
     }
 
-    public function test_serializeWithModifier()
+    public function test_serializeWithModifier(): void
     {
         $serializer = new class extends Serializer{
-
             protected array $fields = [
                 'id',
                 'date:timestamp,minutes'
@@ -98,7 +99,7 @@ class SerializerTest extends TestCase
              * @param $value
              * @return float|int
              */
-            public function modifierMinutes($value)
+            public function modifierMinutes(mixed $value): float|int
             {
                 return $value / 60;
             }
@@ -108,7 +109,7 @@ class SerializerTest extends TestCase
             [
                 'id' => 1,
                 'date' => $serializer->modifierMinutes(
-                    Carbon::parse($this->model->date)->timestamp
+                    Carbon::parse($this->model->getAttribute('date'))->timestamp
                 )
             ],
             $serializer->serialize($this->model)
@@ -116,7 +117,7 @@ class SerializerTest extends TestCase
     }
 
 
-    public function serializeWithInvalidModifierProvider():array
+    public static function serializeWithInvalidModifierProvider(): array
     {
         return [
             [
@@ -135,17 +136,17 @@ class SerializerTest extends TestCase
      * @param $expectedException
      * @throws \JsonAPI\Exceptions\SerializerException
      */
-    public function test_serializeWithInvalidModifier(array $fields, $expectedException)
+    public function test_serializeWithInvalidModifier(array $fields, string $expectedException): void
     {
         $serializer = new Serializer($fields);
 
         $this->expectException(\JsonAPI\Exceptions\SerializerException::class);
-        $this->expectErrorMessage($expectedException);
+        $this->expectExceptionMessage($expectedException);
         $serializer->serialize($this->model);
     }
 
 
-    public function test_serializeOnlyMethod()
+    public function test_serializeOnlyMethod(): void
     {
         $serializer = new Serializer(['id', 'firstname' => 'trim', 'lastname', 'date' => 'timestamp']);
 

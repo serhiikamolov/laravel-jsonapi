@@ -8,12 +8,11 @@ use Illuminate\Testing\TestResponse;
 trait JsonApiAsserts
 {
     /**
-     * @param JsonResponse | TestResponse $response
      * @param array|null $fields
      */
-    protected function assertJsonApiResponse($response, ?array $fields = null)
+    protected function assertJsonApiResponse(JsonResponse|TestResponse $response, ?array $fields = null): void
     {
-        $response = $response instanceof TestResponse ? $response->baseResponse : $response;
+        $response = $this->getJsonResponse($response);
 
         $data = $response->getData(true);
         $this->assertArrayHasKey('links', $data);
@@ -27,10 +26,10 @@ trait JsonApiAsserts
     }
 
     /**
-     * @param $keys
-     * @param $array
+     * @param array $keys
+     * @param array $array
      */
-    protected function assertJsonApiDataHasKey($keys, $array)
+    protected function assertJsonApiDataHasKey(array $keys, array $array): void
     {
         $array = isset($array[0]) && is_array($array[0]) ? $array[0] : $array;
         foreach ($keys as $key => $field) {
@@ -39,17 +38,18 @@ trait JsonApiAsserts
                 $this->assertJsonApiDataHasKey($field, $array[$key]);
             } else {
                 $field = is_numeric($key) ? $field : $key;
-                $this->assertArrayHasKey($field, $array ?? []);
+                $this->assertArrayHasKey($field, $array);
             }
         }
     }
 
     /**
-     * @param JsonResponse | TestResponse $response
-     * @param array|null $additionalFields
+     * @param array $additionalFields
      */
-    protected function assertJsonApiAuthResponse($response, array $additionalFields = [])
-    {
+    protected function assertJsonApiAuthResponse(
+        JsonResponse|TestResponse $response,
+        array $additionalFields = []
+    ): void {
         $this->assertJsonApiResponse($response, [
             'access_token',
             'token_type',
@@ -58,13 +58,11 @@ trait JsonApiAsserts
     }
 
     /**
-     * @param JsonResponse | TestResponse $response
      * @param string $error
-     * @return bool
      */
-    protected function assertJsonApiResponseError($response, string $error)
+    protected function assertJsonApiResponseError(JsonResponse|TestResponse $response, string $error): void
     {
-        $response = $response instanceof TestResponse ? $response->baseResponse : $response;
+        $response = $this->getJsonResponse($response);
 
         $data = $response->getData(true);
         $this->assertArrayHasKey('errors', $data);
@@ -72,10 +70,21 @@ trait JsonApiAsserts
     }
 
 
-    protected function assertJsonApiErrors($response, array $errors)
+    protected function assertJsonApiErrors(JsonResponse|TestResponse $response, array $errors): void
     {
-        $response = $response instanceof TestResponse ? $response->baseResponse : $response;
+        $response = $this->getJsonResponse($response);
         $data = $response->getData(true);
         $this->assertEquals($data['errors'], $errors);
+    }
+
+    protected function getJsonResponse(JsonResponse|TestResponse $response): JsonResponse
+    {
+        $response = $response instanceof TestResponse ? $response->baseResponse : $response;
+
+        if (!$response instanceof JsonResponse) {
+            throw new \InvalidArgumentException('Expected JSON response.');
+        }
+
+        return $response;
     }
 }
